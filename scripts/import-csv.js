@@ -53,9 +53,10 @@ try {
   }
 }
 
-// Parse CSV
+// Parse CSV (handle both comma and semicolon separators)
 const lines = content.split(/\r?\n/).filter(line => line.trim());
-const headers = lines[0].split(',').map(h => h.trim());
+const separator = lines[0].includes(';') ? ';' : ',';
+const headers = lines[0].split(separator).map(h => h.trim());
 
 console.log('Headers:', headers);
 console.log(`Total rows: ${lines.length - 1}`);
@@ -78,14 +79,13 @@ const columnMap = {
   'Ficoeritrina RFU': 'focieritrina_rfu',
   'Clorofila ug/l': 'clorofila',
   'Clorofila RFU': 'clorofila_rfu',
-  'Profundidade m': 'profundidade',
-  'Cabo V': 'cabo'
+  'Profundidade m': 'profundidade'
 };
 
 // Parse rows
 const measurements = [];
 for (let i = 1; i < lines.length; i++) {
-  const values = lines[i].split(',').map(v => v.trim());
+  const values = lines[i].split(separator).map(v => v.trim());
   const row = {};
   
   headers.forEach((header, index) => {
@@ -110,7 +110,10 @@ for (let i = 1; i < lines.length; i++) {
     }
   });
   
-  measurements.push(row);
+  // Skip rows with empty data or hora
+  if (row.data && row.hora) {
+    measurements.push(row);
+  }
 }
 
 console.log(`Parsed ${measurements.length} measurements`);
