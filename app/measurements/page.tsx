@@ -114,13 +114,19 @@ export default function MeasurementsPage() {
     return value >= range.min && value <= range.max;
   };
 
+  // Parse DD-MM-YYYY format to Date object
+  const parseDate = (dateStr: string, timeStr: string): Date => {
+    const [day, month, year] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day, ...timeStr.split(':').map(Number) as [number, number, number]);
+  };
+
   const getFilteredHistory = () => {
     if (!history.length) return [];
     
     // Add ISO timestamp to each entry (data is already sorted chronologically from API)
     const historyWithTimestamp = history.map(entry => ({
       ...entry,
-      timestamp: new Date(`${entry.data}T${entry.hora}`).toISOString()
+      timestamp: parseDate(entry.data, entry.hora).toISOString()
     }));
     
     // Custom date range selected
@@ -129,14 +135,14 @@ export default function MeasurementsPage() {
       const end = new Date(endDate).getTime() + (24 * 60 * 60 * 1000 - 1); // Include full end day
       
       return historyWithTimestamp.filter(entry => {
-        const entryTime = new Date(`${entry.data}T${entry.hora}`).getTime();
+        const entryTime = parseDate(entry.data, entry.hora).getTime();
         return entryTime >= start && entryTime <= end;
       });
     }
     
     // Get the most recent date as reference
     const mostRecent = historyWithTimestamp[historyWithTimestamp.length - 1];
-    const referenceTime = new Date(`${mostRecent.data}T${mostRecent.hora}`).getTime();
+    const referenceTime = parseDate(mostRecent.data, mostRecent.hora).getTime();
     
     let hoursBack = 24;
     switch (timeRange) {
@@ -152,7 +158,7 @@ export default function MeasurementsPage() {
     const cutoffTime = referenceTime - (hoursBack * 60 * 60 * 1000);
     
     return historyWithTimestamp.filter(entry => {
-      const entryTime = new Date(`${entry.data}T${entry.hora}`).getTime();
+      const entryTime = parseDate(entry.data, entry.hora).getTime();
       return entryTime >= cutoffTime;
     });
   };
