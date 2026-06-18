@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { Activity, Droplets, Thermometer, Wind, Clock, Beaker, Zap, Waves } from 'lucide-react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Activity, Droplets, Thermometer, Wind, Clock, Beaker, Zap, Waves, Download, Camera } from 'lucide-react';
 import { measurementLabels, measurementUnits, measurementRanges } from '@/lib/measurements';
 import './measurements.css';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import html2canvas from 'html2canvas';
+import * as XLSX from 'xlsx';
 
 interface Measurement {
   value: number;
@@ -50,6 +52,7 @@ export default function MeasurementsPage() {
   const [timeRange, setTimeRange] = useState<'1h' | '12h' | '1d' | '1w' | '15d' | '1m' | 'custom'>('1d');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
+  const chartRef = useRef<HTMLDivElement>(null);
 
   // Fetch measurements
   useEffect(() => {
@@ -176,6 +179,50 @@ export default function MeasurementsPage() {
     console.log('Filtered result:', filtered.length, 'entries');
     
     return filtered;
+  };
+
+  // Download chart as PNG
+  const downloadChartAsPNG = async () => {
+    if (!chartRef.current) return;
+    
+    try {
+      const canvas = await html2canvas(chartRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2
+      });
+      
+      const link = document.createElement('a');
+      link.download = `${selectedKey}_chart_${new Date().toISOString().split('T')[0]}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (error) {
+      console.error('Error downloading chart:', error);
+    }
+  };
+
+  // Download data as Excel
+  const downloadDataAsExcel = () => {
+    if (!selectedKey) return;
+    
+    const filteredData = getFilteredHistory();
+    if (filteredData.length === 0) return;
+    
+    // Prepare data for Excel
+    const excelData = filteredData.map(entry => ({
+      Data: entry.data,
+      Hora: entry.hora,
+      [measurementLabels[selectedKey as keyof typeof measurementLabels] || selectedKey]: entry.value
+    }));
+    
+    // Create workbook and worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, selectedKey);
+    
+    // Download
+    XLSX.writeFile(wb, `${selectedKey}_dados_${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
   const keys = Object.keys(measurements).filter(key => key !== 'cabo').sort();
@@ -312,7 +359,7 @@ export default function MeasurementsPage() {
                 </div>
 
                 {/* Chart */}
-                <div className="chart-container">
+                <div className="chart-container" ref={chartRef}>
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={getFilteredHistory()}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -373,6 +420,24 @@ export default function MeasurementsPage() {
                       />
                     </LineChart>
                   </ResponsiveContainer>
+                </div>
+
+                {/* Download buttons */}
+                <div className="download-buttons">
+                  <button 
+                    onClick={downloadChartAsPNG}
+                    className="download-btn png-btn"
+                  >
+                    <Camera className="icon" />
+                    <span>Descarregar PNG</span>
+                  </button>
+                  <button 
+                    onClick={downloadDataAsExcel}
+                    className="download-btn excel-btn"
+                  >
+                    <Download className="icon" />
+                    <span>Descarregar Excel</span>
+                  </button>
                 </div>
 
                 <div className="history-table-container">
