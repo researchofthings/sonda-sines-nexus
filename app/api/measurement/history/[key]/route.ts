@@ -62,6 +62,13 @@ export async function GET(
         };
       });
 
+    // Debug logging
+    console.log(`API ${key}:`, {
+      totalRows: history.length,
+      firstDate: history[0]?.data + ' ' + history[0]?.hora,
+      lastDate: history[history.length - 1]?.data + ' ' + history[history.length - 1]?.hora,
+    });
+
     return NextResponse.json({
       key,
       history,
