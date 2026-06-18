@@ -39,8 +39,9 @@ export async function GET(
       .from('measurements')
       .select('*')
       .not(column, 'is', null)
-      .order('data', { ascending: true })
-      .order('hora', { ascending: true });
+      .order('data', { ascending: false })
+      .order('hora', { ascending: false })
+      .limit(10000);
 
     if (error) {
       console.error('Error fetching measurement history:', error);

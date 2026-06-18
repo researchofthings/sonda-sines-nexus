@@ -123,7 +123,7 @@ export default function MeasurementsPage() {
   const getFilteredHistory = () => {
     if (!history.length) return [];
     
-    // Add ISO timestamp to each entry (data is already sorted chronologically from API)
+    // Add ISO timestamp to each entry (data comes sorted newest first from API)
     const historyWithTimestamp = history.map(entry => ({
       ...entry,
       timestamp: parseDate(entry.data, entry.hora).toISOString()
@@ -140,8 +140,8 @@ export default function MeasurementsPage() {
       });
     }
     
-    // Get the most recent date as reference
-    const mostRecent = historyWithTimestamp[historyWithTimestamp.length - 1];
+    // Get the most recent date as reference (first entry since data is sorted descending)
+    const mostRecent = historyWithTimestamp[0];
     const referenceTime = parseDate(mostRecent.data, mostRecent.hora).getTime();
     
     let hoursBack = 24;
