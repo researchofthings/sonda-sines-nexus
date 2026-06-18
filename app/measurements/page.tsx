@@ -144,13 +144,18 @@ export default function MeasurementsPage() {
           <div className="header-title">
             <Droplets className="icon header-icon" />
             <div>
-              <h1>Monitoramento da Qualidade da Água</h1>
+              <h1>Monitorização da Qualidade da Água</h1>
               <p className="subtitle">Sonda Paramétrica Sines Nexus - IPS</p>
             </div>
           </div>
-          <div className="last-reception">
-            <Clock className="icon" />
-            <span>{measurements.temperatura ? `Última Receção de Dados: ${measurements.temperatura.data.split('-').reverse().join('-')} ${measurements.temperatura.hora}` : 'Última Receção de Dados: 17-06-2026 12:00:00'}</span>
+          <div className="header-info">
+            <div className="last-reception">
+              <Clock className="icon" />
+              <span>{measurements.temperatura ? `Última Receção: ${measurements.temperatura.data.split('-').reverse().join('-')} ${measurements.temperatura.hora}` : 'Última Receção: 17-06-2026 12:00:00'}</span>
+            </div>
+            <div className="header-description">
+              <span>Valores em tempo real. Clique num cartão para ver histórico e gráficos.</span>
+            </div>
           </div>
         </div>
       </header>
@@ -203,10 +208,9 @@ export default function MeasurementsPage() {
                       <span className="unit">{measurements[key].unit}</span>
                     </div>
                     <div className="card-footer">
-                      <span className="card-hint">Clique para ver histórico</span>
                       {range && (
                         <span className={`range-badge ${inRange ? 'in-range' : 'out-of-range'}`}>
-                          {range.min}-{range.max}
+                          Intervalo: {range.min}-{range.max}
                         </span>
                       )}
                     </div>
