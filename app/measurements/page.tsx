@@ -385,7 +385,7 @@ export default function MeasurementsPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {getFilteredHistory().slice().reverse().slice(0, 20).map((entry, idx) => (
+                      {getFilteredHistory().map((entry, idx) => (
                         <tr key={idx}>
                           <td>{entry.data}</td>
                           <td>{entry.hora}</td>
