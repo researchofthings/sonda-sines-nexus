@@ -38,7 +38,7 @@ export async function GET(
 
     const { data, error } = await supabase
       .from('measurements')
-      .select(`${column}, data, hora, created_at`)
+      .select('*')
       .not(column, 'is', null)
       .order('created_at', { ascending: false })
       .limit(100);
@@ -51,14 +51,17 @@ export async function GET(
       );
     }
 
-    const history = data
-      ?.reverse()
-      .map((row: Record<string, unknown>) => ({
-        value: row[column] as number,
-        timestamp: row.created_at as string,
-        data: row.data as string,
-        hora: row.hora as string,
-      })) || [];
+    const history = ((data as unknown[] | null) || [])
+      .reverse()
+      .map((row) => {
+        const r = row as Record<string, unknown>;
+        return {
+          value: Number(r[column]),
+          timestamp: String(r.created_at),
+          data: String(r.data),
+          hora: String(r.hora),
+        };
+      });
 
     return NextResponse.json({
       key,
