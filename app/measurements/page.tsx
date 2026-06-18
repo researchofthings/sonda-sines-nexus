@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Activity, Droplets, Thermometer, Wind, Clock, Beaker, Zap, Waves, Download, Camera } from 'lucide-react';
+import { Activity, Droplets, Thermometer, Wind, Clock, Beaker, Zap, Waves, Download, Camera, CloudFog, Leaf, Battery } from 'lucide-react';
 import { measurementLabels, measurementUnits, measurementRanges } from '@/lib/measurements';
 import './measurements.css';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -33,14 +33,14 @@ const measurementIcons: Record<string, React.ReactNode> = {
   salinidade: <Waves className="icon" />,
   tds: <Beaker className="icon" />,
   ph: <Activity className="icon" />,
-  orp: <Activity className="icon" />,
+  orp: <Battery className="icon" />,
   do: <Droplets className="icon" />,
   doSat: <Droplets className="icon" />,
-  turbidez: <Wind className="icon" />,
+  turbidez: <CloudFog className="icon" />,
   focieritrina: <Beaker className="icon" />,
   focieritrinaRFU: <Beaker className="icon" />,
-  clorofila: <Beaker className="icon" />,
-  clorofilaRFU: <Beaker className="icon" />,
+  clorofila: <Leaf className="icon" />,
+  clorofilaRFU: <Leaf className="icon" />,
   profundidade: <Waves className="icon" />,
 };
 
@@ -108,8 +108,8 @@ export default function MeasurementsPage() {
     if (key === 'temperatura') return val.toFixed(1);
     if (key === 'profundidade') return val.toFixed(2);
     
-    // Large integers (condutividade, salinidade, etc.) - no decimals
-    const integerKeys = ['condutividade', 'spCondutividade', 'salinidade', 'tds', 'orp', 'turbidez', 'focieritrina', 'clorofila', 'profundidade'];
+    // Large integers (condutividade, etc.) - no decimals
+    const integerKeys = ['condutividade', 'spCondutividade', 'turbidez', 'focieritrina', 'clorofila'];
     if (integerKeys.includes(key)) return Math.round(val).toString();
     
     if (Math.abs(val) < 0.01) return val.toExponential(2);
