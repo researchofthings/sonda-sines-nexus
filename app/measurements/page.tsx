@@ -157,10 +157,25 @@ export default function MeasurementsPage() {
     
     const cutoffTime = referenceTime - (hoursBack * 60 * 60 * 1000);
     
-    return historyWithTimestamp.filter(entry => {
+    // Debug logging
+    console.log('History filtering:', {
+      totalEntries: history.length,
+      mostRecent: mostRecent.data + ' ' + mostRecent.hora,
+      referenceTime: new Date(referenceTime).toISOString(),
+      cutoffTime: new Date(cutoffTime).toISOString(),
+      hoursBack,
+      firstEntry: history[0].data + ' ' + history[0].hora,
+      lastEntry: history[history.length - 1].data + ' ' + history[history.length - 1].hora
+    });
+    
+    const filtered = historyWithTimestamp.filter(entry => {
       const entryTime = parseDate(entry.data, entry.hora).getTime();
       return entryTime >= cutoffTime;
     });
+    
+    console.log('Filtered result:', filtered.length, 'entries');
+    
+    return filtered;
   };
 
   const keys = Object.keys(measurements).filter(key => key !== 'cabo').sort();
