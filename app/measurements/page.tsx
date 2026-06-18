@@ -114,9 +114,9 @@ export default function MeasurementsPage() {
     return value >= range.min && value <= range.max;
   };
 
-  // Parse YYYY-MM-DD format from database to Date object
+  // Parse DD-MM-YYYY format from database to Date object
   const parseDate = (dateStr: string, timeStr: string): Date => {
-    const [year, month, day] = dateStr.split('-').map(Number);
+    const [day, month, year] = dateStr.split('-').map(Number);
     return new Date(year, month - 1, day, ...timeStr.split(':').map(Number) as [number, number, number]);
   };
 
