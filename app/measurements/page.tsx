@@ -370,9 +370,9 @@ export default function MeasurementsPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {getFilteredHistory().slice(-20).reverse().map((entry, idx) => (
+                      {getFilteredHistory().slice().reverse().slice(0, 20).map((entry, idx) => (
                         <tr key={idx}>
-                          <td>{entry.data.split('-').reverse().join('-')}</td>
+                          <td>{entry.data}</td>
                           <td>{entry.hora}</td>
                           <td className="value-cell">{formatValue(entry.value, selectedKey)}</td>
                         </tr>
