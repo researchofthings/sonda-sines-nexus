@@ -109,10 +109,12 @@ export default function MeasurementsPage() {
     if (key === 'profundidade') return val.toFixed(2);
     
     // Large integers (condutividade, etc.) - no decimals
-    const integerKeys = ['condutividade', 'spCondutividade', 'turbidez', 'focieritrina', 'clorofila'];
+    const integerKeys = ['condutividade', 'spCondutividade'];
     if (integerKeys.includes(key)) return Math.round(val).toString();
     
-    if (Math.abs(val) < 0.01) return val.toExponential(2);
+    // Very small values - show as fixed 3 decimals (not exponential)
+    if (Math.abs(val) < 0.01 && val !== 0) return val.toFixed(3);
+    if (val === 0) return '0';
     return val.toFixed(3);
   };
 
