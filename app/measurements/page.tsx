@@ -115,24 +115,31 @@ export default function MeasurementsPage() {
   const getFilteredHistory = () => {
     if (!history.length) return [];
     
-    const now = new Date();
-    const filtered = history.filter(entry => {
-      const entryDate = new Date(`${entry.data}T${entry.hora}`);
-      const diffMs = now.getTime() - entryDate.getTime();
-      const diffHours = diffMs / (1000 * 60 * 60);
-      
-      switch (timeRange) {
-        case '1h': return diffHours <= 1;
-        case '12h': return diffHours <= 12;
-        case '1d': return diffHours <= 24;
-        case '1w': return diffHours <= 168; // 7 days
-        case '15d': return diffHours <= 360; // 15 days
-        case '1m': return diffHours <= 720; // 30 days
-        default: return true;
-      }
-    });
+    // Sort by date descending to get most recent first
+    const sortedHistory = [...history].sort((a, b) => 
+      new Date(`${b.data}T${b.hora}`).getTime() - new Date(`${a.data}T${a.hora}`).getTime()
+    );
     
-    return filtered.sort((a, b) => new Date(`${a.data}T${a.hora}`).getTime() - new Date(`${b.data}T${b.hora}`).getTime());
+    // Get the most recent date as reference
+    const mostRecent = sortedHistory[0];
+    const referenceTime = new Date(`${mostRecent.data}T${mostRecent.hora}`).getTime();
+    
+    let limit = sortedHistory.length;
+    switch (timeRange) {
+      case '1h': limit = 1; break;
+      case '12h': limit = 12; break;
+      case '1d': limit = 24; break;
+      case '1w': limit = 168; break; // 7 days
+      case '15d': limit = 360; break; // 15 days
+      case '1m': limit = 720; break; // 30 days
+      default: limit = sortedHistory.length;
+    }
+    
+    // Take the last N hours of data points
+    const filtered = sortedHistory.slice(0, limit);
+    
+    // Return in chronological order (oldest first) for the chart
+    return filtered.reverse();
   };
 
   const keys = Object.keys(measurements).sort();
