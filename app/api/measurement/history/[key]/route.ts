@@ -39,9 +39,8 @@ export async function GET(
       .from('measurements')
       .select('*')
       .not(column, 'is', null)
-      .order('data', { ascending: false })
-      .order('hora', { ascending: false })
-      .limit(500);
+      .order('data', { ascending: true })
+      .order('hora', { ascending: true });
 
     if (error) {
       console.error('Error fetching measurement history:', error);
@@ -52,7 +51,6 @@ export async function GET(
     }
 
     const history = ((data as unknown[] | null) || [])
-      .reverse()
       .map((row) => {
         const r = row as Record<string, unknown>;
         return {

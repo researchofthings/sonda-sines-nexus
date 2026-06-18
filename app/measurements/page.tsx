@@ -117,10 +117,8 @@ export default function MeasurementsPage() {
   const getFilteredHistory = () => {
     if (!history.length) return [];
     
-    // Sort by date chronologically and add timestamp
-    let sortedHistory = [...history].sort((a, b) => 
-      new Date(`${a.data}T${a.hora}`).getTime() - new Date(`${b.data}T${b.hora}`).getTime()
-    ).map(entry => ({
+    // Add ISO timestamp to each entry (data is already sorted chronologically from API)
+    const historyWithTimestamp = history.map(entry => ({
       ...entry,
       timestamp: new Date(`${entry.data}T${entry.hora}`).toISOString()
     }));
@@ -130,14 +128,14 @@ export default function MeasurementsPage() {
       const start = new Date(startDate).getTime();
       const end = new Date(endDate).getTime() + (24 * 60 * 60 * 1000 - 1); // Include full end day
       
-      return sortedHistory.filter(entry => {
+      return historyWithTimestamp.filter(entry => {
         const entryTime = new Date(`${entry.data}T${entry.hora}`).getTime();
         return entryTime >= start && entryTime <= end;
       });
     }
     
     // Get the most recent date as reference
-    const mostRecent = sortedHistory[sortedHistory.length - 1];
+    const mostRecent = historyWithTimestamp[historyWithTimestamp.length - 1];
     const referenceTime = new Date(`${mostRecent.data}T${mostRecent.hora}`).getTime();
     
     let hoursBack = 24;
@@ -153,7 +151,7 @@ export default function MeasurementsPage() {
     
     const cutoffTime = referenceTime - (hoursBack * 60 * 60 * 1000);
     
-    return sortedHistory.filter(entry => {
+    return historyWithTimestamp.filter(entry => {
       const entryTime = new Date(`${entry.data}T${entry.hora}`).getTime();
       return entryTime >= cutoffTime;
     });
