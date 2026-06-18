@@ -368,8 +368,8 @@ export default function MeasurementsPage() {
                         dataKey="value" 
                         stroke="#0284c7" 
                         strokeWidth={2}
-                        dot={{ fill: '#0284c7', strokeWidth: 0, r: 3 }}
-                        activeDot={{ r: 6, fill: '#0284c7' }}
+                        dot={false}
+                        activeDot={{ r: 6, fill: '#0284c7', stroke: '#fff', strokeWidth: 2 }}
                       />
                     </LineChart>
                   </ResponsiveContainer>
