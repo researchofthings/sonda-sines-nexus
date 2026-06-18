@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Activity, Droplets, Thermometer, Wind, Clock, Beaker, Zap, Waves } from 'lucide-react';
 import { measurementLabels, measurementUnits, measurementRanges } from '@/lib/measurements';
-import './measurements-new.css';
+import './measurements.css';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface Measurement {
