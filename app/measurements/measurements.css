@@ -309,12 +309,54 @@
   color: #0284c7;
 }
 
-/* Time Range Selector */
-.time-range-selector {
+/* Date Range Selector */
+.date-range-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.preset-buttons {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
   flex-wrap: wrap;
+}
+
+.custom-date-inputs {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0.75rem;
+  background: rgba(241, 245, 249, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.custom-date-inputs label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.custom-date-inputs input[type="date"] {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #334155;
+  background: white;
+  cursor: pointer;
+}
+
+.custom-date-inputs input[type="date"]:focus {
+  outline: none;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.1);
 }
 
 .time-range-btn {

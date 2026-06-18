@@ -47,7 +47,9 @@ export default function MeasurementsPage() {
   const [connected, setConnected] = useState(false);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
-  const [timeRange, setTimeRange] = useState<'1h' | '12h' | '1d' | '1w' | '15d' | '1m'>('1d');
+  const [timeRange, setTimeRange] = useState<'1h' | '12h' | '1d' | '1w' | '15d' | '1m' | 'custom'>('1d');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
 
   // Fetch measurements
   useEffect(() => {
@@ -115,31 +117,46 @@ export default function MeasurementsPage() {
   const getFilteredHistory = () => {
     if (!history.length) return [];
     
-    // Sort by date descending to get most recent first
-    const sortedHistory = [...history].sort((a, b) => 
-      new Date(`${b.data}T${b.hora}`).getTime() - new Date(`${a.data}T${a.hora}`).getTime()
-    );
+    // Sort by date chronologically and add timestamp
+    let sortedHistory = [...history].sort((a, b) => 
+      new Date(`${a.data}T${a.hora}`).getTime() - new Date(`${b.data}T${b.hora}`).getTime()
+    ).map(entry => ({
+      ...entry,
+      timestamp: new Date(`${entry.data}T${entry.hora}`).toISOString()
+    }));
     
-    // Get the most recent date as reference
-    const mostRecent = sortedHistory[0];
-    const referenceTime = new Date(`${mostRecent.data}T${mostRecent.hora}`).getTime();
-    
-    let limit = sortedHistory.length;
-    switch (timeRange) {
-      case '1h': limit = 1; break;
-      case '12h': limit = 12; break;
-      case '1d': limit = 24; break;
-      case '1w': limit = 168; break; // 7 days
-      case '15d': limit = 360; break; // 15 days
-      case '1m': limit = 720; break; // 30 days
-      default: limit = sortedHistory.length;
+    // Custom date range selected
+    if (timeRange === 'custom' && startDate && endDate) {
+      const start = new Date(startDate).getTime();
+      const end = new Date(endDate).getTime() + (24 * 60 * 60 * 1000 - 1); // Include full end day
+      
+      return sortedHistory.filter(entry => {
+        const entryTime = new Date(`${entry.data}T${entry.hora}`).getTime();
+        return entryTime >= start && entryTime <= end;
+      });
     }
     
-    // Take the last N hours of data points
-    const filtered = sortedHistory.slice(0, limit);
+    // Get the most recent date as reference
+    const mostRecent = sortedHistory[sortedHistory.length - 1];
+    const referenceTime = new Date(`${mostRecent.data}T${mostRecent.hora}`).getTime();
     
-    // Return in chronological order (oldest first) for the chart
-    return filtered.reverse();
+    let hoursBack = 24;
+    switch (timeRange) {
+      case '1h': hoursBack = 1; break;
+      case '12h': hoursBack = 12; break;
+      case '1d': hoursBack = 24; break;
+      case '1w': hoursBack = 168; break; // 7 days
+      case '15d': hoursBack = 360; break; // 15 days
+      case '1m': hoursBack = 720; break; // 30 days
+      default: hoursBack = 24;
+    }
+    
+    const cutoffTime = referenceTime - (hoursBack * 60 * 60 * 1000);
+    
+    return sortedHistory.filter(entry => {
+      const entryTime = new Date(`${entry.data}T${entry.hora}`).getTime();
+      return entryTime >= cutoffTime;
+    });
   };
 
   const keys = Object.keys(measurements).sort();
@@ -234,24 +251,45 @@ export default function MeasurementsPage() {
                   <h2>Histórico: {measurementLabels[selectedKey as keyof typeof measurementLabels] || selectedKey}</h2>
                 </div>
                 
-                {/* Time Range Selector */}
-                <div className="time-range-selector">
-                  {[
-                    { key: '1h', label: '1 Hora' },
-                    { key: '12h', label: '12 Horas' },
-                    { key: '1d', label: '1 Dia' },
-                    { key: '1w', label: '1 Semana' },
-                    { key: '15d', label: '15 Dias' },
-                    { key: '1m', label: '1 Mês' },
-                  ].map(({ key, label }) => (
-                    <button
-                      key={key}
-                      className={`time-range-btn ${timeRange === key ? 'active' : ''}`}
-                      onClick={() => setTimeRange(key as any)}
-                    >
-                      {label}
-                    </button>
-                  ))}
+                {/* Date Range Selector */}
+                <div className="date-range-selector">
+                  <div className="preset-buttons">
+                    {[
+                      { key: '1d', label: '1 Dia' },
+                      { key: '1w', label: '1 Semana' },
+                      { key: '15d', label: '15 Dias' },
+                      { key: '1m', label: '1 Mês' },
+                      { key: 'custom', label: 'Personalizado' },
+                    ].map(({ key, label }) => (
+                      <button
+                        key={key}
+                        className={`time-range-btn ${timeRange === key ? 'active' : ''}`}
+                        onClick={() => setTimeRange(key as any)}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  {timeRange === 'custom' && (
+                    <div className="custom-date-inputs">
+                      <label>
+                        De:
+                        <input 
+                          type="date" 
+                          value={startDate} 
+                          onChange={(e) => setStartDate(e.target.value)}
+                        />
+                      </label>
+                      <label>
+                        Até:
+                        <input 
+                          type="date" 
+                          value={endDate} 
+                          onChange={(e) => setEndDate(e.target.value)}
+                        />
+                      </label>
+                    </div>
+                  )}
                 </div>
 
                 {/* Chart */}
@@ -260,16 +298,21 @@ export default function MeasurementsPage() {
                     <LineChart data={getFilteredHistory()}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                       <XAxis 
-                        dataKey="hora" 
+                        dataKey="timestamp" 
                         stroke="#64748b"
-                        tick={{ fill: '#64748b', fontSize: 10 }}
-                        angle={-45}
+                        tick={{ fill: '#64748b', fontSize: 11 }}
+                        angle={-30}
                         textAnchor="end"
-                        height={60}
-                        tickFormatter={(value, index) => {
-                          const data = getFilteredHistory();
-                          const item = data[index];
-                          return item ? `${item.data.split('-').reverse().join('-')}\n${value}` : value;
+                        height={70}
+                        interval="preserveStartEnd"
+                        minTickGap={30}
+                        tickFormatter={(value) => {
+                          const date = new Date(value);
+                          const day = date.getDate().toString().padStart(2, '0');
+                          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                          const hours = date.getHours().toString().padStart(2, '0');
+                          const minutes = date.getMinutes().toString().padStart(2, '0');
+                          return `${day}/${month} ${hours}:${minutes}`;
                         }}
                       />
                       <YAxis 
@@ -291,11 +334,14 @@ export default function MeasurementsPage() {
                           boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                         }}
                         formatter={(value: number) => [formatValue(value, selectedKey), measurementLabels[selectedKey as keyof typeof measurementLabels] || selectedKey]}
-                        labelFormatter={(label, payload) => {
-                          if (payload && payload[0]) {
-                            return `${payload[0].payload.data} ${payload[0].payload.hora}`;
-                          }
-                          return label;
+                        labelFormatter={(label: string) => {
+                          const date = new Date(label);
+                          const day = date.getDate().toString().padStart(2, '0');
+                          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                          const year = date.getFullYear();
+                          const hours = date.getHours().toString().padStart(2, '0');
+                          const minutes = date.getMinutes().toString().padStart(2, '0');
+                          return `${day}-${month}-${year} ${hours}:${minutes}`;
                         }}
                       />
                       <Line 
