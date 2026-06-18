@@ -107,6 +107,11 @@ export default function MeasurementsPage() {
     if (key === 'ph') return val.toFixed(2);
     if (key === 'temperatura') return val.toFixed(1);
     if (key === 'profundidade') return val.toFixed(2);
+    
+    // Large integers (condutividade, salinidade, etc.) - no decimals
+    const integerKeys = ['condutividade', 'spCondutividade', 'salinidade', 'tds', 'orp', 'turbidez', 'focieritrina', 'clorofila', 'profundidade'];
+    if (integerKeys.includes(key)) return Math.round(val).toString();
+    
     if (Math.abs(val) < 0.01) return val.toExponential(2);
     return val.toFixed(3);
   };
