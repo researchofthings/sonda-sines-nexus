@@ -179,17 +179,24 @@ export default function MeasurementsPage() {
             {/* Measurements Grid */}
             <div className="measurements-grid">
               {keys.map((key) => {
-                const inRange = isInRange(key, measurements[key].value);
                 const range = measurementRanges[key as keyof typeof measurementRanges];
+                const hasRange = !!range;
+                const inRange = hasRange ? isInRange(key, measurements[key].value) : null;
+                let indicatorClass = 'no-range';
+                if (hasRange) {
+                  indicatorClass = inRange ? 'in-range' : 'out-of-range';
+                }
+                
                 return (
                   <div
                     key={key}
-                    className={`measurement-card ${selectedKey === key ? 'selected' : ''} ${inRange ? 'in-range' : 'out-of-range'}`}
+                    className={`measurement-card ${selectedKey === key ? 'selected' : ''}`}
                     onClick={() => handleCardClick(key)}
                   >
                     <div className="card-header">
                       {measurementIcons[key] || <Activity className="icon" />}
                       <h3 className="card-title">{measurementLabels[key as keyof typeof measurementLabels] || key}</h3>
+                      <span className={`status-indicator ${indicatorClass}`} title={hasRange ? (inRange ? 'Dentro do intervalo' : 'Fora do intervalo') : 'Sem intervalo definido'}></span>
                     </div>
                     <div className="card-value">
                       {formatValue(measurements[key].value, key)}
@@ -199,7 +206,7 @@ export default function MeasurementsPage() {
                       <span className="card-hint">Clique para ver histórico</span>
                       {range && (
                         <span className={`range-badge ${inRange ? 'in-range' : 'out-of-range'}`}>
-                          {inRange ? '✓' : '✗'} {range.min}-{range.max}
+                          {range.min}-{range.max}
                         </span>
                       )}
                     </div>
