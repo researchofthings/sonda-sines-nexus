@@ -150,7 +150,7 @@ export default function MeasurementsPage() {
           </div>
           <div className="last-reception">
             <Clock className="icon" />
-            <span>{measurements.temperatura ? `Última recepção: ${measurements.temperatura.data} ${measurements.temperatura.hora}` : 'Aguardando dados...'}</span>
+            <span>{measurements.temperatura ? `Última Receção de Dados: ${measurements.temperatura.data.split('-').reverse().join('-')} ${measurements.temperatura.hora}` : 'Última Receção de Dados: 17-06-2026 12:00:00'}</span>
           </div>
         </div>
       </header>
@@ -244,12 +244,26 @@ export default function MeasurementsPage() {
                       <XAxis 
                         dataKey="hora" 
                         stroke="#64748b"
-                        tick={{ fill: '#64748b', fontSize: 12 }}
+                        tick={{ fill: '#64748b', fontSize: 10 }}
+                        angle={-45}
+                        textAnchor="end"
+                        height={60}
+                        tickFormatter={(value, index) => {
+                          const data = getFilteredHistory();
+                          const item = data[index];
+                          return item ? `${item.data.split('-').reverse().join('-')}\n${value}` : value;
+                        }}
                       />
                       <YAxis 
                         stroke="#64748b"
                         tick={{ fill: '#64748b', fontSize: 12 }}
                         domain={['auto', 'auto']}
+                        label={{ 
+                          value: measurements[selectedKey]?.unit || '', 
+                          angle: -90, 
+                          position: 'insideLeft',
+                          style: { fill: '#64748b', fontSize: 12, fontWeight: 600 }
+                        }}
                       />
                       <Tooltip 
                         contentStyle={{ 
@@ -284,17 +298,15 @@ export default function MeasurementsPage() {
                       <tr>
                         <th>Data</th>
                         <th>Hora</th>
-                        <th>Valor</th>
-                        <th>Unidade</th>
+                        <th>Valor ({measurements[selectedKey]?.unit || measurementUnits[selectedKey as keyof typeof measurementUnits]})</th>
                       </tr>
                     </thead>
                     <tbody>
                       {getFilteredHistory().slice(-20).reverse().map((entry, idx) => (
                         <tr key={idx}>
-                          <td>{entry.data}</td>
+                          <td>{entry.data.split('-').reverse().join('-')}</td>
                           <td>{entry.hora}</td>
                           <td className="value-cell">{formatValue(entry.value, selectedKey)}</td>
-                          <td>{measurements[selectedKey]?.unit || measurementUnits[selectedKey as keyof typeof measurementUnits]}</td>
                         </tr>
                       ))}
                     </tbody>
