@@ -173,7 +173,7 @@ export default function MeasurementsPage() {
             <Droplets className="icon header-icon" />
             <div>
               <h1>Monitorização da Qualidade da Água</h1>
-              <p className="subtitle">Sonda Paramétrica Sines Nexus - IPS</p>
+              <p className="subtitle">Sonda Paramétrica Sines Nexus - IPS (v2.1 - June 18)</p>
             </div>
           </div>
           <div className="header-info">
