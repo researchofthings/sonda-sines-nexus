@@ -163,7 +163,7 @@ export default function MeasurementsPage() {
     });
   };
 
-  const keys = Object.keys(measurements).sort();
+  const keys = Object.keys(measurements).filter(key => key !== 'cabo').sort();
 
   return (
     <div className="app">
