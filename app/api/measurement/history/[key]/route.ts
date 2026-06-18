@@ -25,7 +25,6 @@ export async function GET(
       clorofila: 'clorofila',
       clorofilaRFU: 'clorofila_rfu',
       profundidade: 'profundidade',
-      cabo: 'cabo',
     };
 
     const column = columnMap[key];

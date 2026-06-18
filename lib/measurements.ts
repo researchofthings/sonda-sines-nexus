@@ -16,7 +16,6 @@ export interface MeasurementData {
   clorofila: number;       // Clorofila ug/l
   clorofilaRFU: number;    // Clorofila RFU
   profundidade: number;    // Profundidade m
-  cabo: number;            // Cabo V
 }
 
 export const measurementUnits: Record<keyof MeasurementData, string> = {
@@ -37,7 +36,6 @@ export const measurementUnits: Record<keyof MeasurementData, string> = {
   clorofila: 'ug/l',
   clorofilaRFU: 'RFU',
   profundidade: 'm',
-  cabo: 'V',
 };
 
 export const measurementLabels: Record<keyof MeasurementData, string> = {
@@ -58,11 +56,15 @@ export const measurementLabels: Record<keyof MeasurementData, string> = {
   clorofila: 'Clorofila',
   clorofilaRFU: 'Clorofila RFU',
   profundidade: 'Profundidade',
-  cabo: 'Cabo',
 };
 
 export const measurementRanges: Partial<Record<keyof MeasurementData, { min: number; max: number }>> = {
-  temperatura: { min: -5, max: 50 },
-  ph: { min: 0, max: 14 },
-  doSat: { min: 0, max: 200 },
+  temperatura: { min: 13, max: 20 },
+  condutividade: { min: 48000, max: 56000 },
+  salinidade: { min: 30, max: 37 },
+  ph: { min: 7.5, max: 8.3 },
+  orp: { min: 100, max: 370 },
+  doSat: { min: 75, max: 85 },
+  turbidez: { min: 0, max: 20 },
+  clorofila: { min: 0, max: 20 },
 };

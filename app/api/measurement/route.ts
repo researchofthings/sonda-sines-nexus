@@ -35,7 +35,6 @@ export async function POST(request: NextRequest) {
         clorofila: body.clorofila,
         clorofila_rfu: body.clorofilaRFU,
         profundidade: body.profundidade,
-        cabo: body.cabo,
       });
 
     if (insertError) {
@@ -63,7 +62,6 @@ export async function POST(request: NextRequest) {
       { key: 'clorofila', value: body.clorofila, unit: 'ug/l' },
       { key: 'clorofilaRFU', value: body.clorofilaRFU, unit: 'RFU' },
       { key: 'profundidade', value: body.profundidade, unit: 'm' },
-      { key: 'cabo', value: body.cabo, unit: 'V' },
     ];
 
     for (const measurement of measurementTypes) {
