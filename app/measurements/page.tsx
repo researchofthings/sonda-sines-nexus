@@ -225,7 +225,13 @@ export default function MeasurementsPage() {
     XLSX.writeFile(wb, `${selectedKey}_dados_${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
-  const keys = Object.keys(measurements).filter(key => key !== 'cabo').sort();
+  const keys = Object.keys(measurements)
+    .filter(key => key !== 'cabo')
+    .sort((a, b) => {
+      const labelA = measurementLabels[a as keyof typeof measurementLabels] || a;
+      const labelB = measurementLabels[b as keyof typeof measurementLabels] || b;
+      return labelA.localeCompare(labelB, 'pt');
+    });
 
   return (
     <div className="app">
