@@ -169,14 +169,6 @@ export default function NotificationsPage() {
           </div>
         ) : (
           <div className="notifications-list">
-            <div className="summary-card">
-              <AlertTriangle className="summary-icon" />
-              <div className="summary-text">
-                <span className="summary-count">{notifications.length}</span>
-                <span className="summary-label">alertas hoje</span>
-              </div>
-            </div>
-
             {sortedDates.map(date => (
               <div key={date} className="date-group">
                 <button

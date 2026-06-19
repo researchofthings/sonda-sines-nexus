@@ -113,8 +113,9 @@ export async function GET(request: NextRequest) {
     
     const allMeasurements = [...(prevMeasurements || []), ...(measurements || [])];
     
-    // Detect all out-of-range readings
+    // Detect consecutive out-of-range readings (2+ consecutive)
     const notifications: Notification[] = [];
+    const consecutiveOutOfRange: Record<string, { count: number; lastEntry: MeasurementEntry }> = {};
     
     const keysToCheck = Object.keys(measurementRanges);
     
@@ -126,23 +127,32 @@ export async function GET(request: NextRequest) {
         const inRange = isInRange(key, value);
         
         if (!inRange) {
-          const range = measurementRanges[key as keyof typeof measurementRanges];
-          // Get previous value if available
-          const prevValue = i > 0 ? getMeasurementValue(allMeasurements[i - 1], key) : value;
-          
-          notifications.push({
-            id: `${entry.data}_${entry.hora}_${key}`,
-            date: entry.data,
-            time: entry.hora,
-            measurementKey: key,
-            measurementLabel: key,
-            value: value,
-            previousValue: prevValue,
-            range: range!,
-            consecutiveCount: 1,
-            read: false,
-            createdAt: new Date().toISOString(),
-          });
+          if (consecutiveOutOfRange[key]) {
+            consecutiveOutOfRange[key].count++;
+            
+            // Only create notification on 2nd consecutive reading
+            if (consecutiveOutOfRange[key].count === 2) {
+              const range = measurementRanges[key as keyof typeof measurementRanges];
+              notifications.push({
+                id: `${entry.data}_${entry.hora}_${key}`,
+                date: entry.data,
+                time: entry.hora,
+                measurementKey: key,
+                measurementLabel: key,
+                value: value,
+                previousValue: getMeasurementValue(consecutiveOutOfRange[key].lastEntry, key),
+                range: range!,
+                consecutiveCount: 2,
+                read: false,
+                createdAt: new Date().toISOString(),
+              });
+            }
+          } else {
+            consecutiveOutOfRange[key] = { count: 1, lastEntry: entry };
+          }
+        } else {
+          // Reset consecutive count when value comes back in range
+          delete consecutiveOutOfRange[key];
         }
       }
     }
