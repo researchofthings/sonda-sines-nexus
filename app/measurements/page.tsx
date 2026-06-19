@@ -278,14 +278,6 @@ export default function MeasurementsPage() {
           </div>
         ) : (
           <>
-            {/* Last Update Info */}
-            {measurements.temperatura && (
-              <div className="last-update">
-                <Clock className="icon" />
-                <span>Última atualização: {measurements.temperatura.data} {measurements.temperatura.hora}</span>
-              </div>
-            )}
-
             {/* Measurements Grid */}
             <div className="measurements-grid">
               {keys.map((key) => {
@@ -376,7 +368,7 @@ export default function MeasurementsPage() {
                 {/* Chart */}
                 <div className="chart-container" ref={chartRef}>
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={getFilteredHistory()}>
+                    <LineChart data={[...getFilteredHistory()].reverse()}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                       <XAxis 
                         dataKey="timestamp" 
