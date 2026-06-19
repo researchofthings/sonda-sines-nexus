@@ -308,21 +308,40 @@
   height: 16px;
 }
 
-.consecutive-badge {
+.out-of-range-badge {
   display: flex;
   align-items: center;
   gap: 0.25rem;
   padding: 0.25rem 0.5rem;
-  background: rgba(245, 158, 11, 0.2);
-  color: #92400e;
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
   font-size: 0.75rem;
   font-weight: 600;
   border-radius: 12px;
 }
 
-.consecutive-badge .icon {
+.out-of-range-badge .icon {
   width: 14px;
   height: 14px;
+}
+
+.value-display {
+  margin: 1rem 0;
+}
+
+.value-display .value-number {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.value-display .value-number.out-of-range {
+  color: #dc2626;
+}
+
+.value-display .unit {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #64748b;
 }
 
 .measurement-name {

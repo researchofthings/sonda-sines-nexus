@@ -209,9 +209,9 @@ export default function NotificationsPage() {
                             <Clock className="icon" />
                             <span>{notification.time}</span>
                           </div>
-                          <div className="consecutive-badge">
+                          <div className="out-of-range-badge">
                             <AlertTriangle className="icon" />
-                            <span>Consecutivo</span>
+                            <span>Fora do intervalo</span>
                           </div>
                         </div>
 
@@ -220,26 +220,13 @@ export default function NotificationsPage() {
                             {measurementLabels[notification.measurementKey] || notification.measurementKey}
                           </h3>
                           
-                          <div className="values-comparison">
-                            <div className="value-box previous">
-                              <span className="value-label">Anterior</span>
-                              <span className="value-number">
-                                {notification.previousValue}
-                                {measurementUnits[notification.measurementKey] && (
-                                  <span className="unit"> {measurementUnits[notification.measurementKey]}</span>
-                                )}
-                              </span>
-                            </div>
-                            <div className="arrow">→</div>
-                            <div className="value-box current out-of-range">
-                              <span className="value-label">Atual</span>
-                              <span className="value-number">
-                                {notification.value}
-                                {measurementUnits[notification.measurementKey] && (
-                                  <span className="unit"> {measurementUnits[notification.measurementKey]}</span>
-                                )}
-                              </span>
-                            </div>
+                          <div className="value-display">
+                            <span className="value-number out-of-range">
+                              {notification.value}
+                              {measurementUnits[notification.measurementKey] && (
+                                <span className="unit"> {measurementUnits[notification.measurementKey]}</span>
+                              )}
+                            </span>
                           </div>
 
                           <div className="range-info">
