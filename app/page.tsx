@@ -72,7 +72,7 @@ export default function MeasurementsPage() {
 
   const fetchMeasurements = async () => {
     try {
-      const res = await fetch('/api/measurement');
+      const res = await fetch('/api/data-reception');
       const data = await res.json();
       if (!data.error) {
         setMeasurements(data);
@@ -85,8 +85,7 @@ export default function MeasurementsPage() {
 
   const fetchNotificationCount = async () => {
     try {
-      const today = new Date().toISOString().split('T')[0];
-      const res = await fetch(`/api/notifications?date=${today}`);
+      const res = await fetch('/api/notifications?days=7');
       const data = await res.json();
       if (data.count !== undefined) {
         setNotificationCount(data.count);
@@ -98,7 +97,7 @@ export default function MeasurementsPage() {
 
   const fetchHistory = useCallback(async (key: string) => {
     try {
-      const res = await fetch(`/api/measurement/history/${key}`);
+      const res = await fetch(`/api/data-reception/history/${key}`);
       const data = await res.json();
       if (!data.error) {
         setHistory(data.history);
