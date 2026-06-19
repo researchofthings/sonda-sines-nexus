@@ -72,16 +72,23 @@ function getMeasurementValue(entry: MeasurementEntry, key: string): number {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const date = searchParams.get('date');
+    const days = parseInt(searchParams.get('days') || '7', 10);
     
-    // Get measurements for the specified date or today
-    const targetDate = date || new Date().toISOString().split('T')[0];
+    // Calculate date range (last N days)
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days + 1);
     
-    // Get today's measurements ordered by time
+    const startDateStr = startDate.toISOString().split('T')[0];
+    const endDateStr = endDate.toISOString().split('T')[0];
+    
+    // Get measurements for the date range
     const { data: measurements, error } = await supabase
       .from('measurements')
       .select('*')
-      .eq('data', targetDate)
+      .gte('data', startDateStr)
+      .lte('data', endDateStr)
+      .order('data', { ascending: true })
       .order('hora', { ascending: true });
     
     if (error) {
@@ -89,11 +96,11 @@ export async function GET(request: NextRequest) {
     }
     
     if (!measurements || measurements.length === 0) {
-      return NextResponse.json({ notifications: [], count: 0 });
+      return NextResponse.json({ notifications: [], count: 0, days });
     }
     
-    // Also get previous day's last measurement to check for consecutive alerts across midnight
-    const prevDate = new Date(targetDate);
+    // Also get day before start date's last measurement for consecutive checking
+    const prevDate = new Date(startDateStr);
     prevDate.setDate(prevDate.getDate() - 1);
     const prevDateStr = prevDate.toISOString().split('T')[0];
     
@@ -153,7 +160,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ 
       notifications,
       count: notifications.length,
-      date: targetDate
+      days,
+      dateRange: { start: startDateStr, end: endDateStr }
     });
   } catch (error) {
     console.error('Error generating notifications:', error);

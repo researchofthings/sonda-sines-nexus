@@ -268,23 +268,19 @@ export default function MeasurementsPage() {
             <div>
               <h1>Monitorização da Qualidade da Água</h1>
               <p className="subtitle">Sonda Paramétrica Sines Nexus - IPS (v2.1 - June 18)</p>
+              <p className="header-description-left">Valores em tempo real. Clique num cartão para ver histórico e gráficos.</p>
             </div>
           </div>
           <div className="header-info">
             <div className="last-reception">
-              <Clock className="icon" />
-              <span>{measurements.temperatura ? `Última Informação: ${measurements.temperatura.data.split('-').reverse().join('-')} ${measurements.temperatura.hora}` : 'Última Informação: 17-06-2026 12:00:00'}</span>
-            </div>
-            <div className="header-actions">
-              <Link href="/notifications" className="notification-bell">
+              <Link href="/notifications" className="notification-bell-inline">
                 <Bell className="icon" />
                 {notificationCount > 0 && (
-                  <span className="notification-badge">{notificationCount}</span>
+                  <span className="notification-badge-inline">{notificationCount}</span>
                 )}
               </Link>
-            </div>
-            <div className="header-description">
-              <span>Valores em tempo real. Clique num cartão para ver histórico e gráficos.</span>
+              <Clock className="icon" />
+              <span>{measurements.temperatura ? `Última Informação: ${measurements.temperatura.data.split('-').reverse().join('-')} ${measurements.temperatura.hora}` : 'Última Informação: 17-06-2026 12:00:00'}</span>
             </div>
           </div>
         </div>

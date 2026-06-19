@@ -62,24 +62,24 @@ const measurementUnits: Record<string, string> = {
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState<string>(() => {
-    return new Date().toISOString().split('T')[0];
-  });
+  const [dateRange, setDateRange] = useState<{start: string, end: string} | null>(null);
   const [expandedDates, setExpandedDates] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetchNotifications();
-  }, [selectedDate]);
+  }, []);
 
   const fetchNotifications = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/notifications?date=${selectedDate}`);
+      const response = await fetch('/api/notifications?days=7');
       const data = await response.json();
       if (data.notifications) {
         setNotifications(data.notifications);
-        // Auto-expand today's notifications
-        setExpandedDates(new Set([selectedDate]));
+        setDateRange(data.dateRange);
+        // Auto-expand all dates with notifications
+        const datesWithNotifications = new Set<string>(data.notifications.map((n: Notification) => n.date));
+        setExpandedDates(datesWithNotifications);
       }
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -125,6 +125,13 @@ export default function NotificationsPage() {
   const groupedNotifications = groupByDate(notifications);
   const sortedDates = Object.keys(groupedNotifications).sort((a, b) => b.localeCompare(a));
 
+  const formatDateRange = () => {
+    if (!dateRange) return '';
+    const start = formatDate(dateRange.start);
+    const end = formatDate(dateRange.end);
+    return `${start} - ${end}`;
+  };
+
   return (
     <div className="notifications-app">
       <header className="notifications-header">
@@ -138,20 +145,12 @@ export default function NotificationsPage() {
               <Bell className="icon header-icon" />
               <div>
                 <h1>Notificações</h1>
-                <p className="subtitle">Alertas de valores fora do intervalo</p>
+                <p className="subtitle">Alertas de valores fora do intervalo • Últimos 7 dias</p>
+                {dateRange && (
+                  <p className="date-range">{formatDateRange()}</p>
+                )}
               </div>
             </div>
-          </div>
-          <div className="date-selector">
-            <label>
-              <Calendar className="icon" />
-              <input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                max={new Date().toISOString().split('T')[0]}
-              />
-            </label>
           </div>
         </div>
       </header>
@@ -166,7 +165,7 @@ export default function NotificationsPage() {
           <div className="empty-state">
             <Bell className="empty-icon" />
             <h2>Sem notificações</h2>
-            <p>Não foram detetados valores fora do intervalo para {formatDate(selectedDate)}</p>
+            <p>Não foram detetados valores fora do intervalo nos últimos 7 dias</p>
           </div>
         ) : (
           <div className="notifications-list">
