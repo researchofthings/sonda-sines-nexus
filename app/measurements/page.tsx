@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Activity, Droplets, Thermometer, Wind, Clock, Beaker, Zap, Waves, Download, Camera, CloudFog, Leaf, Battery } from 'lucide-react';
+import { Activity, Droplets, Thermometer, Wind, Clock, Beaker, Zap, Waves, Download, Camera, CloudFog, Leaf, Battery, Bell } from 'lucide-react';
 import { measurementLabels, measurementUnits, measurementRanges } from '@/lib/measurements';
 import './measurements.css';
+import Link from 'next/link';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import html2canvas from 'html2canvas';
 import * as XLSX from 'xlsx';
@@ -52,15 +53,18 @@ export default function MeasurementsPage() {
   const [timeRange, setTimeRange] = useState<'1h' | '12h' | '1d' | '1w' | '15d' | '1m' | 'custom'>('1d');
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
+  const [notificationCount, setNotificationCount] = useState<number>(0);
   const chartRef = useRef<HTMLDivElement>(null);
 
-  // Fetch measurements
+  // Fetch measurements and notifications
   useEffect(() => {
     fetchMeasurements();
+    fetchNotificationCount();
     setConnected(true);
     
     const interval = setInterval(() => {
       fetchMeasurements();
+      fetchNotificationCount();
     }, 5000);
 
     return () => clearInterval(interval);
@@ -76,6 +80,19 @@ export default function MeasurementsPage() {
     } catch (err) {
       console.error('Failed to fetch measurements:', err);
       setConnected(false);
+    }
+  };
+
+  const fetchNotificationCount = async () => {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const res = await fetch(`/api/notifications?date=${today}`);
+      const data = await res.json();
+      if (data.count !== undefined) {
+        setNotificationCount(data.count);
+      }
+    } catch (err) {
+      console.error('Failed to fetch notification count:', err);
     }
   };
 
@@ -257,6 +274,14 @@ export default function MeasurementsPage() {
             <div className="last-reception">
               <Clock className="icon" />
               <span>{measurements.temperatura ? `Última Informação: ${measurements.temperatura.data.split('-').reverse().join('-')} ${measurements.temperatura.hora}` : 'Última Informação: 17-06-2026 12:00:00'}</span>
+            </div>
+            <div className="header-actions">
+              <Link href="/notifications" className="notification-bell">
+                <Bell className="icon" />
+                {notificationCount > 0 && (
+                  <span className="notification-badge">{notificationCount}</span>
+                )}
+              </Link>
             </div>
             <div className="header-description">
               <span>Valores em tempo real. Clique num cartão para ver histórico e gráficos.</span>
