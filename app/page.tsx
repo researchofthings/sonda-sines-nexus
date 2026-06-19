@@ -292,8 +292,30 @@ export default function MeasurementsPage() {
             <h2>Nenhuma medição disponível</h2>
             <p>Envie dados para visualizar as medições</p>
             <div className="example">
-              <p>Exemplo de API:</p>
+              <p>Link para receção de dados:</p>
               <code>POST /api/data-reception</code>
+            </div>
+            <div className="json-example">
+              <p>Formato JSON:</p>
+              <pre>{`{
+  "data": "2026-06-19",
+  "hora": "14:30:00",
+  "temperatura": 16.4,
+  "condutividade": 45500,
+  "spCondutividade": 54490,
+  "salinidade": 36.1,
+  "tds": 35416.2,
+  "ph": 7.94,
+  "orp": 302.4,
+  "do": 8.32,
+  "doSat": 105.8,
+  "turbidez": 1.23,
+  "focieritrina": 0,
+  "focieritrinaRFU": 0,
+  "clorofila": 0,
+  "clorofilaRFU": 0,
+  "profundidade": 4.065
+}`}</pre>
             </div>
           </div>
         ) : (

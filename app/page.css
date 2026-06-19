@@ -241,6 +241,35 @@
   color: #0284c7;
 }
 
+.json-example {
+  margin-top: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  max-width: 600px;
+  width: 100%;
+}
+
+.json-example p {
+  margin-bottom: 0.5rem;
+  color: #475569;
+}
+
+.json-example pre {
+  display: block;
+  padding: 1rem;
+  background: #f1f5f9;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #0284c7;
+  text-align: left;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
 /* Larger Cards Grid */
 .measurements-grid {
   display: grid;
