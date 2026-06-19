@@ -294,7 +294,7 @@ export default function MeasurementsPage() {
             <p>Envie dados para visualizar as medições</p>
             <div className="example">
               <p>Exemplo de API:</p>
-              <code>POST /api/measurement</code>
+              <code>POST /api/data-reception</code>
             </div>
           </div>
         ) : (
