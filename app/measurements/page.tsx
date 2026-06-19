@@ -112,9 +112,11 @@ export default function MeasurementsPage() {
     const integerKeys = ['condutividade', 'spCondutividade'];
     if (integerKeys.includes(key)) return Math.round(val).toString();
     
+    // Handle zero and near-zero values
+    if (val === 0 || (Math.abs(val) < 0.0001 && Math.abs(val) > 0)) return '0';
+    
     // Very small values - show as fixed 3 decimals (not exponential)
-    if (Math.abs(val) < 0.01 && val !== 0) return val.toFixed(3);
-    if (val === 0) return '0';
+    if (Math.abs(val) < 0.01) return val.toFixed(3);
     return val.toFixed(3);
   };
 
@@ -254,7 +256,7 @@ export default function MeasurementsPage() {
           <div className="header-info">
             <div className="last-reception">
               <Clock className="icon" />
-              <span>{measurements.temperatura ? `Última Receção: ${measurements.temperatura.data.split('-').reverse().join('-')} ${measurements.temperatura.hora}` : 'Última Receção: 17-06-2026 12:00:00'}</span>
+              <span>{measurements.temperatura ? `Última Informação: ${measurements.temperatura.data.split('-').reverse().join('-')} ${measurements.temperatura.hora}` : 'Última Informação: 17-06-2026 12:00:00'}</span>
             </div>
             <div className="header-description">
               <span>Valores em tempo real. Clique num cartão para ver histórico e gráficos.</span>
