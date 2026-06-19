@@ -137,7 +137,7 @@ export default function NotificationsPage() {
       <header className="notifications-header">
         <div className="notifications-header-content">
           <div className="header-left">
-            <Link href="/measurements" className="back-link">
+            <Link href="/" className="back-link">
               <ArrowLeft className="icon" />
               <span>Voltar ao Dashboard</span>
             </Link>
