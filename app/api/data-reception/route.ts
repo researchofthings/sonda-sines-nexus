@@ -116,9 +116,12 @@ export async function POST(request: NextRequest) {
 
       if (contentType.includes('multipart/form-data')) {
         const formData = await request.formData();
-        const file = formData.get('file') as File | null;
-        if (!file) return NextResponse.json({ error: 'No file field in form data' }, { status: 400 });
-        csvText = await file.text();
+        const fieldNames = Array.from(formData.keys());
+        console.log(`[data-reception] Form fields:`, fieldNames);
+        // Accept any field - try 'file' first, then first available field
+        let entry = formData.get('file') ?? formData.get('data') ?? (fieldNames.length ? formData.get(fieldNames[0]) : null);
+        if (!entry) return NextResponse.json({ error: 'No field found in form data' }, { status: 400 });
+        csvText = typeof entry === 'string' ? entry : await (entry as File).text();
       } else {
         csvText = await request.text();
       }
