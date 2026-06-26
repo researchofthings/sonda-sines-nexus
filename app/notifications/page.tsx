@@ -24,21 +24,21 @@ interface GroupedNotifications {
 }
 
 const measurementLabels: Record<string, string> = {
-  temperatura: 'Temperatura',
-  condutividade: 'Condutividade',
-  spCondutividade: 'Condutividade SP',
-  salinidade: 'Salinidade',
-  tds: 'Total de Sólidos Dissolvidos',
+  temperatura: 'Temperature',
+  condutividade: 'Conductivity',
+  spCondutividade: 'SP Conductivity',
+  salinidade: 'Salinity',
+  tds: 'Total Dissolved Solids',
   ph: 'pH',
-  orp: 'Potencial de Oxirredução',
-  do: 'Oxigénio Dissolvido',
-  doSat: 'Oxigénio Dissolvido (Saturação)',
-  turbidez: 'Turbidez',
-  focieritrina: 'Focieritrina',
-  focieritrinaRFU: 'Ficoeritrina RFU',
-  clorofila: 'Clorofila',
-  clorofilaRFU: 'Clorofila RFU',
-  profundidade: 'Profundidade',
+  orp: 'Oxidation-Reduction Potential',
+  do: 'Dissolved Oxygen',
+  doSat: 'Dissolved Oxygen (Saturation)',
+  turbidez: 'Turbidity',
+  focieritrina: 'Phycoerythrin',
+  focieritrinaRFU: 'Phycoerythrin RFU',
+  clorofila: 'Chlorophyll',
+  clorofilaRFU: 'Chlorophyll RFU',
+  profundidade: 'Depth',
 };
 
 const measurementUnits: Record<string, string> = {
@@ -117,8 +117,8 @@ export default function NotificationsPage() {
   };
 
   const getOutOfRangeDirection = (value: number, range: { min: number; max: number }): string => {
-    if (value < range.min) return 'abaixo do mínimo';
-    if (value > range.max) return 'acima do máximo';
+    if (value < range.min) return 'below minimum';
+    if (value > range.max) return 'above maximum';
     return '';
   };
 
@@ -139,13 +139,13 @@ export default function NotificationsPage() {
           <div className="header-left">
             <Link href="/" className="back-link">
               <ArrowLeft className="icon" />
-              <span>Voltar ao Dashboard</span>
+              <span>Back to Dashboard</span>
             </Link>
             <div className="header-title">
               <Bell className="icon header-icon" />
               <div>
-                <h1>Notificações</h1>
-                <p className="subtitle">Alertas de valores fora do intervalo • Últimos 7 dias</p>
+                <h1>Notifications</h1>
+                <p className="subtitle">Out-of-range value alerts • Last 7 days</p>
                 {dateRange && (
                   <p className="date-range">{formatDateRange()}</p>
                 )}
@@ -159,13 +159,13 @@ export default function NotificationsPage() {
         {loading ? (
           <div className="loading">
             <div className="loading-spinner"></div>
-            <p>A carregar notificações...</p>
+            <p>Loading notifications...</p>
           </div>
         ) : notifications.length === 0 ? (
           <div className="empty-state">
             <Bell className="empty-icon" />
-            <h2>Sem notificações</h2>
-            <p>Não foram detetados valores fora do intervalo nos últimos 7 dias</p>
+            <h2>No notifications</h2>
+            <p>No out-of-range values detected in the last 7 days</p>
           </div>
         ) : (
           <div className="notifications-list">
@@ -179,7 +179,7 @@ export default function NotificationsPage() {
                     <Calendar className="icon" />
                     <span className="date-text">{formatDate(date)}</span>
                     <span className="notification-count">
-                      {groupedNotifications[date].length} alerta{groupedNotifications[date].length !== 1 ? 's' : ''}
+                      {groupedNotifications[date].length} alert{groupedNotifications[date].length !== 1 ? 's' : ''}
                     </span>
                   </div>
                   {expandedDates.has(date) ? (
@@ -203,7 +203,7 @@ export default function NotificationsPage() {
                           </div>
                           <div className="out-of-range-badge">
                             <AlertTriangle className="icon" />
-                            <span>Fora do intervalo</span>
+                            <span>Out of range</span>
                           </div>
                         </div>
 
@@ -223,10 +223,10 @@ export default function NotificationsPage() {
 
                           <div className="range-info">
                             <p className="out-of-range-text">
-                              Valor {getOutOfRangeDirection(notification.value, notification.range)}
+                              Value {getOutOfRangeDirection(notification.value, notification.range)}
                             </p>
                             <p className="range-details">
-                              Intervalo esperado: {notification.range.min} - {notification.range.max}
+                              Expected range: {notification.range.min} - {notification.range.max}
                               {measurementUnits[notification.measurementKey] && (
                                 <span> {measurementUnits[notification.measurementKey]}</span>
                               )}

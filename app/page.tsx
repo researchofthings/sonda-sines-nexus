@@ -255,7 +255,7 @@ export default function MeasurementsPage() {
     .sort((a, b) => {
       const labelA = measurementLabels[a as keyof typeof measurementLabels] || a;
       const labelB = measurementLabels[b as keyof typeof measurementLabels] || b;
-      return labelA.localeCompare(labelB, 'pt');
+      return labelA.localeCompare(labelB, 'en');
     });
 
   return (
@@ -265,9 +265,9 @@ export default function MeasurementsPage() {
           <div className="header-title">
             <Droplets className="icon header-icon" />
             <div>
-              <h1>Monitorização da Qualidade da Água</h1>
-              <p className="subtitle">Sonda Paramétrica Sines Nexus - IPS (v2.1 - June 18)</p>
-              <p className="header-description-left">Valores em tempo real. Clique num cartão para ver histórico e gráficos.</p>
+              <h1>Water Quality Monitoring</h1>
+              <p className="subtitle">Parametric Probe Sines Nexus - IPS (v2.1 - June 18)</p>
+              <p className="header-description-left">Real-time values. Click a card to view history and charts.</p>
             </div>
           </div>
           <div className="header-info">
@@ -279,7 +279,7 @@ export default function MeasurementsPage() {
                 )}
               </Link>
               <Clock className="icon" />
-              <span>{measurements.temperatura ? `Última Informação: ${measurements.temperatura.data.split('-').reverse().join('-')} ${measurements.temperatura.hora}` : 'Última Informação: 17-06-2026 12:00:00'}</span>
+              <span>{measurements.temperatura ? `Last Reading: ${measurements.temperatura.data.split('-').reverse().join('-')} ${measurements.temperatura.hora}` : 'Last Reading: 17-06-2026 12:00:00'}</span>
             </div>
           </div>
         </div>
@@ -289,14 +289,14 @@ export default function MeasurementsPage() {
         {keys.length === 0 ? (
           <div className="empty-state">
             <Beaker className="icon" />
-            <h2>Nenhuma medição disponível</h2>
-            <p>Envie dados para visualizar as medições</p>
+            <h2>No measurements available</h2>
+            <p>Send data to visualize measurements</p>
             <div className="example">
-              <p>Link para receção de dados:</p>
+              <p>Data reception link:</p>
               <code>POST /api/data-reception</code>
             </div>
             <div className="json-example">
-              <p>Formato JSON:</p>
+              <p>JSON Format:</p>
               <pre>{`{
   "data": "2026-06-19",
   "hora": "14:30:00",
@@ -340,7 +340,7 @@ export default function MeasurementsPage() {
                     <div className="card-header">
                       {measurementIcons[key] || <Activity className="icon" />}
                       <h3 className="card-title">{measurementLabels[key as keyof typeof measurementLabels] || key}</h3>
-                      <span className={`status-indicator ${indicatorClass}`} title={hasRange ? (inRange ? 'Dentro do intervalo' : 'Fora do intervalo') : 'Sem intervalo definido'}></span>
+                      <span className={`status-indicator ${indicatorClass}`} title={hasRange ? (inRange ? 'Within range' : 'Out of range') : 'No range defined'}></span>
                     </div>
                     <div className="card-value">
                       {formatValue(measurements[key].value, key)}
@@ -349,7 +349,7 @@ export default function MeasurementsPage() {
                     <div className="card-footer">
                       {range && (
                         <span className={`range-badge ${inRange ? 'in-range' : 'out-of-range'}`}>
-                          Intervalo: {range.min}-{range.max}
+                          Range: {range.min}-{range.max}
                         </span>
                       )}
                     </div>
@@ -363,18 +363,18 @@ export default function MeasurementsPage() {
               <div className="history-section">
                 <div className="history-header">
                   <Clock className="icon" />
-                  <h2>Histórico: {measurementLabels[selectedKey as keyof typeof measurementLabels] || selectedKey}</h2>
+                  <h2>History: {measurementLabels[selectedKey as keyof typeof measurementLabels] || selectedKey}</h2>
                 </div>
                 
                 {/* Date Range Selector */}
                 <div className="date-range-selector">
                   <div className="preset-buttons">
                     {[
-                      { key: '1d', label: '1 Dia' },
-                      { key: '1w', label: '1 Semana' },
-                      { key: '15d', label: '15 Dias' },
-                      { key: '1m', label: '1 Mês' },
-                      { key: 'custom', label: 'Personalizado' },
+                      { key: '1d', label: '1 Day' },
+                      { key: '1w', label: '1 Week' },
+                      { key: '15d', label: '15 Days' },
+                      { key: '1m', label: '1 Month' },
+                      { key: 'custom', label: 'Custom' },
                     ].map(({ key, label }) => (
                       <button
                         key={key}
@@ -388,7 +388,7 @@ export default function MeasurementsPage() {
                   {timeRange === 'custom' && (
                     <div className="custom-date-inputs">
                       <label>
-                        De:
+                        From:
                         <input 
                           type="date" 
                           value={startDate} 
@@ -396,7 +396,7 @@ export default function MeasurementsPage() {
                         />
                       </label>
                       <label>
-                        Até:
+                        To:
                         <input 
                           type="date" 
                           value={endDate} 
@@ -478,14 +478,14 @@ export default function MeasurementsPage() {
                     className="download-btn png-btn"
                   >
                     <Camera className="icon" />
-                    <span>Descarregar PNG</span>
+                    <span>Download PNG</span>
                   </button>
                   <button 
                     onClick={downloadDataAsExcel}
                     className="download-btn excel-btn"
                   >
                     <Download className="icon" />
-                    <span>Descarregar Excel</span>
+                    <span>Download Excel</span>
                   </button>
                 </div>
 
@@ -493,9 +493,9 @@ export default function MeasurementsPage() {
                   <table className="history-table">
                     <thead>
                       <tr>
-                        <th>Data</th>
-                        <th>Hora</th>
-                        <th>Valor ({measurements[selectedKey]?.unit || measurementUnits[selectedKey as keyof typeof measurementUnits]})</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Value ({measurements[selectedKey]?.unit || measurementUnits[selectedKey as keyof typeof measurementUnits]})</th>
                       </tr>
                     </thead>
                     <tbody>
