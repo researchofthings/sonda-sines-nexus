@@ -106,6 +106,9 @@ async function upsertCurrent(body: MeasurementData) {
 export async function POST(request: NextRequest) {
   try {
     const contentType = request.headers.get('content-type') || '';
+    const userAgent = request.headers.get('user-agent') || 'unknown';
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    console.log(`[data-reception] POST from IP=${ip} UA="${userAgent}" Content-Type="${contentType}"`);
 
     // ── CSV upload (multipart/form-data or text/csv) ──────────────────────
     if (contentType.includes('multipart/form-data') || contentType.includes('text/csv')) {
@@ -120,7 +123,9 @@ export async function POST(request: NextRequest) {
         csvText = await request.text();
       }
 
+      console.log(`[data-reception] CSV received, first 300 chars: ${csvText.slice(0, 300)}`);
       const rows = parseCSV(csvText);
+      console.log(`[data-reception] CSV parsed: ${rows.length} rows. Last row:`, rows[rows.length - 1]);
       if (rows.length === 0) return NextResponse.json({ error: 'No valid rows found in CSV' }, { status: 400 });
 
       const batchSize = 500;
@@ -161,6 +166,7 @@ export async function POST(request: NextRequest) {
 
     // ── Single JSON measurement ───────────────────────────────────────────
     const body: MeasurementData = await request.json();
+    console.log(`[data-reception] JSON received:`, JSON.stringify(body));
     if (!body.data || !body.hora) {
       return NextResponse.json({ error: 'data and hora are required' }, { status: 400 });
     }
