@@ -8,6 +8,9 @@ const CSV_COLUMN_MAP: Record<string, string> = {
   'Data': 'data',
   'Hora': 'hora',
   'Temperatura ºC': 'temperatura',
+  'Temperatura °C': 'temperatura',
+  'Temperatura ?C': 'temperatura',
+  'Temperatura': 'temperatura',
   'Condutividade mS/cm': 'condutividade',
   'SpCondutividade mS/cm': 'sp_condutividade',
   'Salinidade PSU': 'salinidade',
@@ -24,11 +27,19 @@ const CSV_COLUMN_MAP: Record<string, string> = {
   'Profundidade m': 'profundidade',
 };
 
+function normalizeHeader(h: string): string {
+  // Replace any non-ASCII degree-like characters with º for consistent matching
+  return h.replace(/[\u00b0\u00ba\ufffd\u0080-\u00bf]/g, match => {
+    if (match === '\u00b0' || match === '\u00ba') return 'º';
+    return '?';
+  }).trim();
+}
+
 function parseCSV(text: string): Record<string, unknown>[] {
   const lines = text.split(/\r?\n/).filter(l => l.trim());
   if (lines.length < 2) return [];
   const sep = lines[0].includes(';') ? ';' : ',';
-  const headers = lines[0].split(sep).map(h => h.trim());
+  const headers = lines[0].split(sep).map(normalizeHeader);
   const rows: Record<string, unknown>[] = [];
 
   for (let i = 1; i < lines.length; i++) {
@@ -36,7 +47,7 @@ function parseCSV(text: string): Record<string, unknown>[] {
     const row: Record<string, unknown> = {};
     headers.forEach((header, idx) => {
       const dbCol = CSV_COLUMN_MAP[header];
-      if (!dbCol) return;
+      if (!dbCol) return; // skips Cabo and unknown columns
       const val = values[idx];
       if (!val) return;
       if (dbCol === 'data') {
@@ -48,7 +59,11 @@ function parseCSV(text: string): Record<string, unknown>[] {
         row[dbCol] = parseFloat(val.replace(',', '.'));
       }
     });
-    if (row.data && row.hora) rows.push(row);
+    if (row.data && row.hora) {
+      // Default profundidade to 0 if not present
+      if (row.profundidade === undefined) row.profundidade = 0;
+      rows.push(row);
+    }
   }
   return rows;
 }
