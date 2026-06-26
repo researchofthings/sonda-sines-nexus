@@ -250,8 +250,10 @@ export default function MeasurementsPage() {
     XLSX.writeFile(wb, `${selectedKey}_dados_${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
+  const hiddenKeys = ['clorofilaRFU', 'condutividade', 'focieritrinaRFU', 'tds'];
+
   const keys = Object.keys(measurements)
-    .filter(key => key !== 'cabo')
+    .filter(key => key !== 'cabo' && !hiddenKeys.includes(key))
     .sort((a, b) => {
       const labelA = measurementLabels[a as keyof typeof measurementLabels] || a;
       const labelB = measurementLabels[b as keyof typeof measurementLabels] || b;
@@ -265,7 +267,7 @@ export default function MeasurementsPage() {
           <div className="header-title">
             <Droplets className="icon header-icon" />
             <div>
-              <h1>Water Quality Monitoring</h1>
+              <h1>Water and Ecological Quality</h1>
               <p className="subtitle">Parametric Probe Sines Nexus - IPS (v2.1 - June 18)</p>
               <p className="header-description-left">Real-time values. Click a card to view history and charts.</p>
             </div>

@@ -47,7 +47,7 @@ export const measurementLabels: Record<keyof MeasurementData, string> = {
   salinidade: 'Salinity',
   tds: 'Total Dissolved Solids',
   ph: 'pH',
-  orp: 'Oxidation-Reduction Potential',
+  orp: 'ORP Potential',
   do: 'Dissolved Oxygen',
   doSat: 'Dissolved Oxygen (Saturation)',
   turbidez: 'Turbidity',
