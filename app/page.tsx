@@ -119,21 +119,16 @@ export default function MeasurementsPage() {
   const formatValue = (val: number, key: string) => {
     if (val === undefined || val === null) return '-';
     
-    // Special formatting for different types
-    if (key === 'ph') return val.toFixed(2);
-    if (key === 'temperatura') return val.toFixed(1);
-    if (key === 'profundidade') return val.toFixed(2);
-    
     // Large integers (condutividade, etc.) - no decimals
     const integerKeys = ['condutividade', 'spCondutividade'];
     if (integerKeys.includes(key)) return Math.round(val).toString();
     
-    // Handle zero and near-zero values
-    if (val === 0 || (Math.abs(val) < 0.0001 && Math.abs(val) > 0)) return '0';
+    // Handle zero
+    if (val === 0) return '0';
     
-    // Very small values - show as fixed 3 decimals (not exponential)
-    if (Math.abs(val) < 0.01) return val.toFixed(3);
-    return val.toFixed(3);
+    // Up to 2 significant decimals, no trailing zeros
+    const fixed2 = parseFloat(val.toFixed(2));
+    return fixed2.toString();
   };
 
   const isInRange = (key: string, value: number): boolean => {
@@ -268,7 +263,7 @@ export default function MeasurementsPage() {
             <Droplets className="icon header-icon" />
             <div>
               <h1>Water and Ecological Quality</h1>
-              <p className="subtitle">Parametric Probe Sines Nexus - IPS (v2.1 - June 18)</p>
+              <p className="subtitle">Parametric Probe Sines Nexus - IPS</p>
               <p className="header-description-left">Real-time values. Click a card to view history and charts.</p>
             </div>
           </div>
@@ -341,7 +336,7 @@ export default function MeasurementsPage() {
                   >
                     <div className="card-header">
                       {measurementIcons[key] || <Activity className="icon" />}
-                      <h3 className="card-title">{measurementLabels[key as keyof typeof measurementLabels] || key}</h3>
+                      <h3 className="card-title">{key === 'ph' ? (<><span style={{textTransform:'none'}}>p</span>H</>) : (measurementLabels[key as keyof typeof measurementLabels] || key)}</h3>
                       <span className={`status-indicator ${indicatorClass}`} title={hasRange ? (inRange ? 'Within range' : 'Out of range') : 'No range defined'}></span>
                     </div>
                     <div className="card-value">
@@ -365,7 +360,7 @@ export default function MeasurementsPage() {
               <div className="history-section">
                 <div className="history-header">
                   <Clock className="icon" />
-                  <h2>History: {measurementLabels[selectedKey as keyof typeof measurementLabels] || selectedKey}</h2>
+                  <h2>History: {selectedKey === 'ph' ? 'pH' : (measurementLabels[selectedKey as keyof typeof measurementLabels] || selectedKey)}</h2>
                 </div>
                 
                 {/* Date Range Selector */}

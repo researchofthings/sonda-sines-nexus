@@ -50,7 +50,7 @@ const measurementUnits: Record<string, string> = {
   ph: '',
   orp: 'mV',
   do: 'mg/l',
-  doSat: '%sat',
+  doSat: '%',
   turbidez: 'NTU',
   focieritrina: 'ug/l',
   focieritrinaRFU: 'RFU',

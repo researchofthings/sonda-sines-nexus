@@ -29,7 +29,7 @@ export const measurementUnits: Record<keyof MeasurementData, string> = {
   ph: '',
   orp: 'mV',
   do: 'mg/l',
-  doSat: '%sat',
+  doSat: '%',
   turbidez: 'NTU',
   focieritrina: 'ug/l',
   focieritrinaRFU: 'RFU',
