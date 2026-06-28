@@ -149,6 +149,25 @@ export default function MeasurementsPage() {
     return fixed2.toString();
   };
 
+  const getRangeStatus = (key: string, value: number): 'in-range' | 'moderate' | 'out-of-range' => {
+    const range = measurementRanges[key as keyof typeof measurementRanges];
+    if (!range) return 'in-range';
+    
+    // Calculate how far the value is from the range
+    const rangeWidth = range.max - range.min;
+    const moderateThreshold = rangeWidth * 0.5; // 50% outside the range is moderate
+    
+    if (value >= range.min && value <= range.max) {
+      return 'in-range';
+    } else if (value < range.min) {
+      const deviation = range.min - value;
+      return deviation <= moderateThreshold ? 'moderate' : 'out-of-range';
+    } else {
+      const deviation = value - range.max;
+      return deviation <= moderateThreshold ? 'moderate' : 'out-of-range';
+    }
+  };
+
   const isInRange = (key: string, value: number): boolean => {
     const range = measurementRanges[key as keyof typeof measurementRanges];
     if (!range) return true;
@@ -393,11 +412,8 @@ export default function MeasurementsPage() {
               {keys.map((key) => {
                 const range = measurementRanges[key as keyof typeof measurementRanges];
                 const hasRange = !!range;
-                const inRange = hasRange ? isInRange(key, measurements[key].value) : null;
-                let indicatorClass = 'no-range';
-                if (hasRange) {
-                  indicatorClass = inRange ? 'in-range' : 'out-of-range';
-                }
+                const rangeStatus = hasRange ? getRangeStatus(key, measurements[key].value) : 'no-range';
+                let indicatorClass = hasRange ? rangeStatus : 'no-range';
                 
                 return (
                   <div
@@ -408,7 +424,13 @@ export default function MeasurementsPage() {
                     <div className="card-header">
                       {measurementIcons[key] || <Activity className="icon" />}
                       <h3 className="card-title">{key === 'ph' ? (<><span style={{textTransform:'none'}}>p</span>H</>) : (measurementLabels[key as keyof typeof measurementLabels] || key)}</h3>
-                      <span className={`status-indicator ${indicatorClass}`} title={hasRange ? (inRange ? 'Within range' : 'Out of range') : 'No range defined'}></span>
+                      <span className={`status-indicator ${indicatorClass}`} title={
+                      hasRange ? (
+                        rangeStatus === 'in-range' ? 'Within optimal range' :
+                        rangeStatus === 'moderate' ? 'Moderate deviation - investigate' :
+                        'Critical deviation - action required'
+                      ) : 'No range defined'
+                    }></span>
                     </div>
                     <div className="card-value">
                       {formatValue(measurements[key].value, key)}
@@ -416,7 +438,7 @@ export default function MeasurementsPage() {
                     </div>
                     <div className="card-footer">
                       {range && (
-                        <span className={`range-badge ${inRange ? 'in-range' : 'out-of-range'}`}>
+                        <span className={`range-badge ${rangeStatus}`}>
                           Range: {range.min}-{range.max}
                         </span>
                       )}
