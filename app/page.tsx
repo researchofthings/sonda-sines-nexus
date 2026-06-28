@@ -656,8 +656,7 @@ export default function MeasurementsPage() {
                 </p>
                 <div className="notification-list">
                   <div><strong>Green indicators:</strong> Individual parameters within normal ranges</div>
-                  <div><strong>Yellow indicators:</strong> Individual parameters showing moderate deviations</div>
-                  <div><strong>Red indicators:</strong> Individual parameters with critical values requiring immediate attention</div>
+                  <div><strong>Red indicators:</strong> Individual parameters outside normal ranges requiring attention</div>
                   <div><strong>Click the bell:</strong> View detailed notification history and parameter status</div>
                 </div>
                 <p>
