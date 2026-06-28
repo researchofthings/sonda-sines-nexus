@@ -635,6 +635,24 @@ export default function MeasurementsPage() {
                   <div><span className="color-indicator red"></span> <strong>0-49:</strong> Critical - Poor quality, action required</div>
                 </div>
               </div>
+              
+              <div className="about-section">
+                <h3>Notification System</h3>
+                <p>
+                  The system continuously monitors all water quality parameters and generates notifications when values fall outside their optimal ranges. 
+                  The notification bell in the header shows the count of active alerts.
+                </p>
+                <div className="notification-list">
+                  <div><strong>Green indicators:</strong> All parameters within normal ranges</div>
+                  <div><strong>Yellow indicators:</strong> Some parameters showing moderate deviations</div>
+                  <div><strong>Red indicators:</strong> Critical values requiring immediate attention</div>
+                  <div><strong>Click the bell:</strong> View detailed notification history and parameter status</div>
+                </div>
+                <p className="formula-note">
+                  Notifications are automatically generated when measurements exceed the defined optimal ranges for each parameter, 
+                  helping operators quickly identify and respond to water quality issues.
+                </p>
+              </div>
             </div>
           </div>
         </div>

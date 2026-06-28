@@ -51,7 +51,7 @@
 .last-reception {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   padding: 0.5rem 1rem 0.5rem 0.75rem;
   background: rgba(2, 132, 199, 0.1);
   border-radius: 20px;
@@ -187,8 +187,8 @@
 }
 
 .about-icon-button .icon {
-  width: 18px;
-  height: 18px;
+  width: 19px;
+  height: 19px;
 }
 
 .main {
@@ -905,6 +905,18 @@
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.5rem;
+  color: #334155;
+  font-size: 0.875rem;
+}
+
+.notification-list {
+  margin-top: 1rem;
+}
+
+.notification-list div {
+  margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  border-left: 3px solid #0284c7;
   color: #334155;
   font-size: 0.875rem;
 }
