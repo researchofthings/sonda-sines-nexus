@@ -677,9 +677,9 @@ export default function MeasurementsPage() {
                   providing a quick overview of recent water quality issues.
                 </p>
                 <div className="notification-list">
-                  <div><strong>Green indicators:</strong> All parameters within normal ranges</div>
-                  <div><strong>Yellow indicators:</strong> Some parameters showing moderate deviations</div>
-                  <div><strong>Red indicators:</strong> Critical values requiring immediate attention</div>
+                  <div><strong>Green indicators:</strong> Individual parameters within normal ranges</div>
+                  <div><strong>Yellow indicators:</strong> Individual parameters showing moderate deviations</div>
+                  <div><strong>Red indicators:</strong> Individual parameters with critical values requiring immediate attention</div>
                   <div><strong>Click the bell:</strong> View detailed notification history and parameter status</div>
                 </div>
                 <p>
