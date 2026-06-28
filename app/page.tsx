@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Activity, Droplets, Thermometer, Wind, Clock, Beaker, Zap, Waves, Download, Camera, CloudFog, Leaf, Battery, Bell } from 'lucide-react';
+import { Activity, Droplets, Thermometer, Wind, Clock, Beaker, Zap, Waves, Download, Camera, CloudFog, Leaf, Battery, Bell, Info } from 'lucide-react';
 import { measurementLabels, measurementUnits, measurementRanges } from '@/lib/measurements';
 import { calculateGQI, GQIResult } from '@/lib/gqi';
 import './page.css';
@@ -319,6 +319,9 @@ export default function MeasurementsPage() {
                   <span className="notification-badge-inline">{notificationCount}</span>
                 )}
               </Link>
+              <button className="about-icon-button" onClick={() => setShowAbout(true)} title="About Easy to Read Quality Indicator">
+                <Info className="icon" />
+              </button>
               <Clock className="icon" />
               <span>{measurements.temperatura ? `Last Reading: ${measurements.temperatura.data.split('-').reverse().join('-')} ${measurements.temperatura.hora}` : 'Last Reading: 17-06-2026 12:00:00'}</span>
             </div>
@@ -367,9 +370,6 @@ export default function MeasurementsPage() {
                 <div className="gqi-card">
                   <div className="gqi-header">
                     <h3>Easy to Read Quality Indicator</h3>
-                    <button className="about-button" onClick={() => setShowAbout(true)}>
-                      About
-                    </button>
                   </div>
                   <div className="gqi-value" style={{ color: gqi.color }}>
                     {gqi.index}
