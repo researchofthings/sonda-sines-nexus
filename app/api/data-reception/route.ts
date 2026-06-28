@@ -8,11 +8,13 @@ const CSV_COLUMN_MAP: Record<string, string> = {
   'Data': 'data',
   'Hora': 'hora',
   'Temperatura ºC': 'temperatura',
+  'Temperature (ºC)': 'temperatura',
   'Temperatura °C': 'temperatura',
   'Temperatura ?C': 'temperatura',
   'Temperatura': 'temperatura',
   'Condutividade mS/cm': 'condutividade',
   'SpCondutividade mS/cm': 'sp_condutividade',
+  'SpCondutivity (25ºC) mS/cm': 'sp_condutividade',
   'Salinidade PSU': 'salinidade',
   'TDS mg/l': 'tds',
   'pH': 'ph',
@@ -22,6 +24,7 @@ const CSV_COLUMN_MAP: Record<string, string> = {
   'Turbidez NTU': 'turbidez',
   'Focieritrina ug/l': 'focieritrina',
   'Ficoeritrina RFU': 'focieritrina_rfu',
+  'chlorophyll-a  ug/l': 'clorofila',
   'Clorofila ug/l': 'clorofila',
   'Clorofila RFU': 'clorofila_rfu',
   'Profundidade m': 'profundidade',
@@ -51,8 +54,9 @@ function parseCSV(text: string): Record<string, unknown>[] {
       const val = values[idx];
       if (!val) return;
       if (dbCol === 'data') {
-        const parts = val.split('-');
-        row[dbCol] = parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : val;
+        // Handle both DD-MM-YYYY and DD/MM/YYYY formats
+        const parts = val.split(/[-\/]/);
+        row[dbCol] = parts.length === 3 ? `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}` : val;
       } else if (dbCol === 'hora') {
         row[dbCol] = val;
       } else {

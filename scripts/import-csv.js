@@ -66,8 +66,10 @@ const columnMap = {
   'Data': 'data',
   'Hora': 'hora',
   'Temperatura ºC': 'temperatura',
+  'Temperature (ºC)': 'temperatura',
   'Condutividade mS/cm': 'condutividade',
   'SpCondutividade mS/cm': 'sp_condutividade',
+  'SpCondutivity (25ºC) mS/cm': 'sp_condutividade',
   'Salinidade PSU': 'salinidade',
   'TDS mg/l': 'tds',
   'pH': 'ph',
@@ -76,7 +78,8 @@ const columnMap = {
   'DO %sat': 'do_sat',
   'Turbidez NTU': 'turbidez',
   'Focieritrina ug/l': 'focieritrina',
-  'Ficoeritrina RFU': 'focieritrina_rfu',
+  'Focoeritrina RFU': 'focieritrina_rfu',
+  'chlorophyll-a  ug/l': 'clorofila',
   'Clorofila ug/l': 'clorofila',
   'Clorofila RFU': 'clorofila_rfu',
   'Profundidade m': 'profundidade'
@@ -95,10 +98,10 @@ for (let i = 1; i < lines.length; i++) {
       if (value === '' || value === undefined) {
         row[dbColumn] = null;
       } else if (dbColumn === 'data') {
-        // Convert DD-MM-YYYY to YYYY-MM-DD
-        const parts = value.split('-');
+        // Convert DD-MM-YYYY or DD/MM/YYYY to YYYY-MM-DD
+        const parts = value.split(/[-\/]/);
         if (parts.length === 3) {
-          row[dbColumn] = `${parts[2]}-${parts[1]}-${parts[0]}`;
+          row[dbColumn] = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
         } else {
           row[dbColumn] = value;
         }
