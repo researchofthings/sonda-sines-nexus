@@ -680,6 +680,77 @@
   }
 }
 
+/* Global Quality Index Styles */
+.gqi-container {
+  margin-bottom: 2rem;
+}
+
+.gqi-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.gqi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.gqi-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.gqi-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.gqi-value {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.gqi-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.75rem;
+}
+
+.gqi-component {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background: rgba(248, 250, 252, 0.8);
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.gqi-component span:first-child {
+  color: #475569;
+  font-weight: 500;
+}
+
+.gqi-component span:last-child {
+  color: #0f172a;
+  font-weight: 600;
+}
+
 @media (max-width: 480px) {
   .dashboard-grid {
     padding: 0.5rem;
@@ -700,5 +771,17 @@
   
   .modal-header h2 {
     font-size: 1rem;
+  }
+  
+  .gqi-card {
+    padding: 1rem;
+  }
+  
+  .gqi-value {
+    font-size: 2.5rem;
+  }
+  
+  .gqi-details {
+    grid-template-columns: 1fr;
   }
 }

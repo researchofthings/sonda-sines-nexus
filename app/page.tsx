@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Activity, Droplets, Thermometer, Wind, Clock, Beaker, Zap, Waves, Download, Camera, CloudFog, Leaf, Battery, Bell } from 'lucide-react';
 import { measurementLabels, measurementUnits, measurementRanges } from '@/lib/measurements';
+import { calculateGQI, GQIResult } from '@/lib/gqi';
 import './page.css';
 import Link from 'next/link';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -54,6 +55,7 @@ export default function MeasurementsPage() {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [notificationCount, setNotificationCount] = useState<number>(0);
+  const [gqi, setGqi] = useState<GQIResult | null>(null);
   const chartRef = useRef<HTMLDivElement>(null);
 
   // Fetch measurements and notifications
@@ -76,6 +78,21 @@ export default function MeasurementsPage() {
       const data = await res.json();
       if (!data.error) {
         setMeasurements(data);
+        
+        // Calculate GQI if we have all required measurements
+        if (data.doSat && data.clorofila !== undefined && data.turbidez !== undefined && 
+            data.spCondutividade && data.ph && data.temperatura && data.orp) {
+          const gqiResult = calculateGQI(
+            data.doSat.value,
+            data.clorofila.value,
+            data.turbidez.value,
+            data.spCondutividade.value,
+            data.ph.value,
+            data.temperatura.value,
+            data.orp.value
+          );
+          setGqi(gqiResult);
+        }
       }
     } catch (err) {
       console.error('Failed to fetch measurements:', err);
@@ -317,6 +334,53 @@ export default function MeasurementsPage() {
           </div>
         ) : (
           <>
+            {/* Global Quality Index */}
+            {gqi && (
+              <div className="gqi-container">
+                <div className="gqi-card">
+                  <div className="gqi-header">
+                    <h3>Global Quality Index</h3>
+                    <span className="gqi-badge" style={{ backgroundColor: gqi.color }}>
+                      {gqi.classification}
+                    </span>
+                  </div>
+                  <div className="gqi-value" style={{ color: gqi.color }}>
+                    {gqi.index}
+                  </div>
+                  <div className="gqi-details">
+                    <div className="gqi-component">
+                      <span>DO Sat ({gqi.components.doSat.value}%):</span>
+                      <span>{(gqi.components.doSat.index * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="gqi-component">
+                      <span>Chlorophyll-a ({gqi.components.clorofila.value} µg/L):</span>
+                      <span>{(gqi.components.clorofila.index * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="gqi-component">
+                      <span>Turbidity ({gqi.components.turbidez.value} NTU):</span>
+                      <span>{(gqi.components.turbidez.index * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="gqi-component">
+                      <span>SpConductivity ({gqi.components.spCondutividade.value} mS/cm):</span>
+                      <span>{(gqi.components.spCondutividade.index * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="gqi-component">
+                      <span>pH ({gqi.components.ph.value}):</span>
+                      <span>{(gqi.components.ph.index * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="gqi-component">
+                      <span>Temperature ({gqi.components.temperatura.value}°C):</span>
+                      <span>{(gqi.components.temperatura.index * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="gqi-component">
+                      <span>ORP ({gqi.components.orp.value} mV):</span>
+                      <span>{(gqi.components.orp.index * 100).toFixed(1)}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             {/* Measurements Grid */}
             <div className="measurements-grid">
               {keys.map((key) => {
