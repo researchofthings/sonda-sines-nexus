@@ -598,11 +598,15 @@ export default function MeasurementsPage() {
                 <h3>Sines Nexus Project</h3>
                 <p>
                   This dashboard is part of the Sines Nexus project, a comprehensive water quality monitoring system 
-                  for the coastal waters of the Port of Sines, Portugal. The system provides real-time monitoring of key 
-                  environmental parameters to ensure the health and safety of marine ecosystems. The monitoring probe 
-                  is strategically located at coordinates 37°56'55.4"N 8°53'18.9"W in the Port of Sines, operated by 
-                  IPS - Instituto Politécnico de Setúbal. This location provides critical data for maritime environmental 
-                  assessment and helps maintain water quality standards for commercial and recreational activities.
+                  for the coastal waters of the Port of Sines, Portugal.
+                </p>
+                <p>
+                  The system provides real-time monitoring of key environmental parameters to ensure the health and safety 
+                  of marine ecosystems. The monitoring probe is strategically located at coordinates 37°56'55.4"N 8°53'18.9"W 
+                  in the Port of Sines.
+                </p>
+                <p>
+                  Operated by: IPS - Instituto Politécnico de Setúbal
                 </p>
               </div>
               
@@ -610,10 +614,11 @@ export default function MeasurementsPage() {
                 <h3>Easy to Read Quality Indicator</h3>
                 <p>
                   The Easy to Read Quality Indicator (ERQI) provides a comprehensive assessment of water quality using 
-                  a weighted aggregation of seven key water quality parameters. Each parameter is normalized to a 0-1 scale 
-                  based on how close it is to its optimal range, then multiplied by its specific weight contribution. 
-                  The final ERQI score is calculated as: ERQI = (DO_Sat × 0.25) + (Chlorophyll × 0.15) + (Turbidity × 0.15) + 
-                  (SpConductivity × 0.10) + (pH × 0.15) + (Temperature × 0.10) + (ORP × 0.15), then multiplied by 100 for a 0-100 scale.
+                  a weighted aggregation of seven key water quality parameters.
+                </p>
+                <p>
+                  Each parameter is normalized to a 0-1 scale based on how close it is to its optimal range, then multiplied 
+                  by its specific weight contribution. The final score is multiplied by 100 for a 0-100 scale.
                 </p>
                 <div className="formula-list">
                   <div><strong>DO Saturation (%):</strong> Weight 25% - Optimal range: 80% ±5%</div>
@@ -625,9 +630,8 @@ export default function MeasurementsPage() {
                   <div><strong>ORP (mV):</strong> Weight 15% - Optimal range: 100-370 mV (linear scaling)</div>
                 </div>
                 <p>
-                  Parameters within optimal ranges receive higher scores (closer to 1.0), while values outside these ranges 
-                  receive progressively lower scores. This mathematical approach ensures that the ERQI provides a balanced 
-                  and scientifically sound representation of overall water quality conditions.
+                  Parameters within optimal ranges receive higher scores, while values outside these ranges receive 
+                  progressively lower scores. This ensures the ERQI provides a balanced representation of water quality.
                 </p>
               </div>
               
@@ -643,10 +647,12 @@ export default function MeasurementsPage() {
               <div className="about-section">
                 <h3>Notification System</h3>
                 <p>
-                  The system continuously monitors all water quality parameters and generates notifications when values fall outside their optimal ranges. 
-                  The notification bell in the header displays the total count of alerts generated during the last 7 days, providing a quick overview 
-                  of recent water quality issues. This 7-day window helps operators track trends and respond to persistent problems while avoiding 
-                  alert fatigue from older resolved issues.
+                  The system continuously monitors all water quality parameters and generates notifications when values fall 
+                  outside their optimal ranges.
+                </p>
+                <p>
+                  The notification bell in the header displays the total count of alerts generated during the last 7 days, 
+                  providing a quick overview of recent water quality issues.
                 </p>
                 <div className="notification-list">
                   <div><strong>Green indicators:</strong> All parameters within normal ranges</div>
@@ -655,10 +661,8 @@ export default function MeasurementsPage() {
                   <div><strong>Click the bell:</strong> View detailed notification history and parameter status</div>
                 </div>
                 <p>
-                  Notifications are automatically generated when measurements exceed the defined optimal ranges for each parameter. 
-                  The system tracks both the frequency and severity of deviations, helping operators quickly identify and respond to 
-                  water quality issues. Each alert includes timestamp information and specific parameter details to facilitate 
-                  effective troubleshooting and decision-making.
+                  This 7-day window helps operators track trends and respond to persistent problems while avoiding 
+                  alert fatigue from older resolved issues.
                 </p>
               </div>
             </div>
