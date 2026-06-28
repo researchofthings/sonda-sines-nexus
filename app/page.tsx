@@ -374,33 +374,19 @@ export default function MeasurementsPage() {
                     {gqi.index}
                   </div>
                   <div className="gqi-details">
-                    <div className="gqi-component">
-                      <span>DO Sat ({gqi.components.doSat.value}%):</span>
-                      <span>{(gqi.components.doSat.index * 100).toFixed(1)}%</span>
-                    </div>
-                    <div className="gqi-component">
-                      <span>Chlorophyll-a ({gqi.components.clorofila.value} µg/L):</span>
-                      <span>{(gqi.components.clorofila.index * 100).toFixed(1)}%</span>
-                    </div>
-                    <div className="gqi-component">
-                      <span>Turbidity ({gqi.components.turbidez.value} NTU):</span>
-                      <span>{(gqi.components.turbidez.index * 100).toFixed(1)}%</span>
-                    </div>
-                    <div className="gqi-component">
-                      <span>SpConductivity ({gqi.components.spCondutividade.value} mS/cm):</span>
-                      <span>{(gqi.components.spCondutividade.index * 100).toFixed(1)}%</span>
-                    </div>
-                    <div className="gqi-component">
-                      <span>pH ({gqi.components.ph.value}):</span>
-                      <span>{(gqi.components.ph.index * 100).toFixed(1)}%</span>
-                    </div>
-                    <div className="gqi-component">
-                      <span>Temperature ({gqi.components.temperatura.value}°C):</span>
-                      <span>{(gqi.components.temperatura.index * 100).toFixed(1)}%</span>
-                    </div>
-                    <div className="gqi-component">
-                      <span>ORP ({gqi.components.orp.value} mV):</span>
-                      <span>{(gqi.components.orp.index * 100).toFixed(1)}%</span>
+                    <div className="gqi-classification">
+                      <div className="gqi-status green">
+                        <span className="status-indicator"></span>
+                        <span className="status-text">Green = Normal = Good. Within expected environmental standards.</span>
+                      </div>
+                      <div className="gqi-status yellow">
+                        <span className="status-indicator"></span>
+                        <span className="status-text">Yellow = Alert = Moderate. Potential signs of environmental stress. Investigate.</span>
+                      </div>
+                      <div className="gqi-status red">
+                        <span className="status-indicator"></span>
+                        <span className="status-text">Red = Critical = Poor. Environmental risk is present and action is required.</span>
+                      </div>
                     </div>
                   </div>
                 </div>
