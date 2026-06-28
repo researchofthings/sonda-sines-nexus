@@ -56,6 +56,7 @@ export default function MeasurementsPage() {
   const [endDate, setEndDate] = useState<string>('');
   const [notificationCount, setNotificationCount] = useState<number>(0);
   const [gqi, setGqi] = useState<GQIResult | null>(null);
+  const [showAbout, setShowAbout] = useState<boolean>(false);
   const chartRef = useRef<HTMLDivElement>(null);
 
   // Fetch measurements and notifications
@@ -366,28 +367,17 @@ export default function MeasurementsPage() {
                 <div className="gqi-card">
                   <div className="gqi-header">
                     <h3>Global Quality Index</h3>
-                    <span className="gqi-badge" style={{ backgroundColor: gqi.color }}>
-                      {gqi.classification}
-                    </span>
+                    <button className="about-button" onClick={() => setShowAbout(true)}>
+                      About
+                    </button>
                   </div>
                   <div className="gqi-value" style={{ color: gqi.color }}>
                     {gqi.index}
                   </div>
-                  <div className="gqi-details">
-                    <div className="gqi-classification">
-                      <div className="gqi-status green">
-                        <span className="status-indicator"></span>
-                        <span className="status-text">Green = Normal = Good. Within expected environmental standards.</span>
-                      </div>
-                      <div className="gqi-status yellow">
-                        <span className="status-indicator"></span>
-                        <span className="status-text">Yellow = Alert = Moderate. Potential signs of environmental stress. Investigate.</span>
-                      </div>
-                      <div className="gqi-status red">
-                        <span className="status-indicator"></span>
-                        <span className="status-text">Red = Critical = Poor. Environmental risk is present and action is required.</span>
-                      </div>
-                    </div>
+                  <div className="gqi-classification-current">
+                    {gqi.classification === 'Normal' && 'Good. Within expected environmental standards.'}
+                    {gqi.classification === 'Alert' && 'Moderate. Potential signs of environmental stress. Investigate.'}
+                    {gqi.classification === 'Critical' && 'Poor. Environmental risk is present and action is required.'}
                   </div>
                 </div>
               </div>
@@ -587,6 +577,63 @@ export default function MeasurementsPage() {
           </>
         )}
       </main>
+
+      {/* About Modal */}
+      {showAbout && (
+        <div className="modal-overlay" onClick={() => setShowAbout(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>About Global Quality Index</h2>
+              <button className="modal-close" onClick={() => setShowAbout(false)}>
+                ×
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="about-section">
+                <h3>Sines Nexus Project</h3>
+                <p>
+                  This dashboard is part of the Sines Nexus project, a comprehensive water quality monitoring system 
+                  for the coastal waters of Sines, Portugal. The system provides real-time monitoring of key 
+                  environmental parameters to ensure the health and safety of marine ecosystems.
+                </p>
+                <p>
+                  Location: 37°56'55.4"N 8°53'18.9"W<br/>
+                  Operated by: IPS - Instituto Politécnico de Setúbal
+                </p>
+              </div>
+              
+              <div className="about-section">
+                <h3>Global Quality Index Formula</h3>
+                <p>
+                  The Global Quality Index (GQI) is calculated using a weighted aggregation of seven key water quality parameters:
+                </p>
+                <div className="formula-list">
+                  <div><strong>DO Saturation (%):</strong> Weight 25% - Optimal range: 80% ±5%</div>
+                  <div><strong>Chlorophyll-a (µg/L):</strong> Weight 15% - Optimal range: 0-20 µg/L</div>
+                  <div><strong>Turbidity (NTU):</strong> Weight 15% - Optimal range: 0-20 NTU</div>
+                  <div><strong>SpConductivity (mS/cm):</strong> Weight 10% - Optimal range: 56 ±2 mS/cm</div>
+                  <div><strong>pH:</strong> Weight 15% - Optimal range: 7.9 ±0.4</div>
+                  <div><strong>Temperature (°C):</strong> Weight 10% - Optimal range: 16.5 ±3.5°C</div>
+                  <div><strong>ORP (mV):</strong> Weight 15% - Optimal range: 100-370 mV (linear scaling)</div>
+                </div>
+                <p className="formula-note">
+                  Each parameter is normalized to a 0-1 scale based on its optimal range, then multiplied by its weight. 
+                  The sum is multiplied by 100 to get the final GQI score (0-100).
+                </p>
+              </div>
+              
+              <div className="about-section">
+                <h3>Classification</h3>
+                <div className="classification-list">
+                  <div><span className="color-indicator green"></span> <strong>70-100:</strong> Normal - Good water quality</div>
+                  <div><span className="color-indicator yellow"></span> <strong>50-69:</strong> Alert - Moderate quality, investigate</div>
+                  <div><span className="color-indicator red"></span> <strong>0-49:</strong> Critical - Poor quality, action required</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
