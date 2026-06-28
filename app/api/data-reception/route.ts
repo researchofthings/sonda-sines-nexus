@@ -94,33 +94,6 @@ function bodyToDbRow(body: MeasurementData) {
   };
 }
 
-async function upsertCurrent(body: MeasurementData) {
-  const measurementTypes = [
-    { key: 'temperatura', value: body.temperatura, unit: 'ºC' },
-    { key: 'condutividade', value: body.condutividade, unit: 'mS/cm' },
-    { key: 'spCondutividade', value: body.spCondutividade, unit: 'mS/cm' },
-    { key: 'salinidade', value: body.salinidade, unit: 'PSU' },
-    { key: 'tds', value: body.tds, unit: 'mg/l' },
-    { key: 'ph', value: body.ph, unit: '' },
-    { key: 'orp', value: body.orp, unit: 'mV' },
-    { key: 'do', value: body.do, unit: 'mg/l' },
-    { key: 'doSat', value: body.doSat, unit: '%' },
-    { key: 'turbidez', value: body.turbidez, unit: 'NTU' },
-    { key: 'focieritrina', value: body.focieritrina, unit: 'ug/l' },
-    { key: 'focieritrinaRFU', value: body.focieritrinaRFU, unit: 'RFU' },
-    { key: 'clorofila', value: body.clorofila, unit: 'ug/l' },
-    { key: 'clorofilaRFU', value: body.clorofilaRFU, unit: 'RFU' },
-    { key: 'profundidade', value: body.profundidade, unit: 'm' },
-  ];
-  for (const m of measurementTypes) {
-    if (m.value !== undefined && m.value !== null) {
-      await supabase.from('current_measurements').upsert(
-        { key: m.key, value: m.value, unit: m.unit, data: body.data, hora: body.hora, updated_at: new Date().toISOString() },
-        { onConflict: 'key' }
-      );
-    }
-  }
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -158,31 +131,7 @@ export async function POST(request: NextRequest) {
         else inserted += rows.slice(i, i + batchSize).length;
       }
 
-      // Update current_measurements with the last row
-      const last = rows[rows.length - 1];
-      if (last) {
-        const lastBody: MeasurementData = {
-          data: last.data as string,
-          hora: last.hora as string,
-          temperatura: last.temperatura as number,
-          condutividade: last.condutividade as number,
-          spCondutividade: last.sp_condutividade as number,
-          salinidade: last.salinidade as number,
-          tds: last.tds as number,
-          ph: last.ph as number,
-          orp: last.orp as number,
-          do: last.do_mg as number,
-          doSat: last.do_sat as number,
-          turbidez: last.turbidez as number,
-          focieritrina: last.focieritrina as number,
-          focieritrinaRFU: last.focieritrina_rfu as number,
-          clorofila: last.clorofila as number,
-          clorofilaRFU: last.clorofila_rfu as number,
-          profundidade: last.profundidade as number,
-        };
-        await upsertCurrent(lastBody);
-      }
-
+      
       return NextResponse.json({ status: 'success', message: `${inserted} rows imported from CSV`, total: rows.length });
     }
 
@@ -199,8 +148,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to insert measurement' }, { status: 500 });
     }
 
-    await upsertCurrent(body);
-
     return NextResponse.json({ status: 'success', message: 'Measurement recorded', timestamp: `${body.data} ${body.hora}` });
   } catch (error) {
     console.error('Error processing measurement:', error);
@@ -210,35 +157,50 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
+    // Get the latest measurement row
     const { data, error } = await supabase
-      .from('current_measurements')
-      .select('key, value, unit, data, hora')
-      .order('key');
+      .from('measurements')
+      .select('*')
+      .order('data', { ascending: false })
+      .order('hora', { ascending: false })
+      .limit(1)
+      .single();
 
-    if (error) {
-      console.error('Error fetching measurements:', error);
+    if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+      console.error('Error fetching latest measurement:', error);
       return NextResponse.json(
         { error: 'Failed to fetch measurements' },
         { status: 500 }
       );
     }
 
-    // Group by measurement type
+    if (!data) {
+      return NextResponse.json({});
+    }
+
+    // Transform to the expected format
     const measurements: Record<string, {
       value: number;
       unit: string;
       data: string;
       hora: string;
-    }> = {};
-
-    data?.forEach((row) => {
-      measurements[row.key] = {
-        value: row.value,
-        unit: row.unit,
-        data: row.data,
-        hora: row.hora,
-      };
-    });
+    }> = {
+      temperatura: { value: data.temperatura, unit: 'ºC', data: data.data, hora: data.hora },
+      condutividade: { value: data.condutividade, unit: 'mS/cm', data: data.data, hora: data.hora },
+      spCondutividade: { value: data.sp_condutividade, unit: 'mS/cm', data: data.data, hora: data.hora },
+      salinidade: { value: data.salinidade, unit: 'PSU', data: data.data, hora: data.hora },
+      tds: { value: data.tds, unit: 'mg/l', data: data.data, hora: data.hora },
+      ph: { value: data.ph, unit: '', data: data.data, hora: data.hora },
+      orp: { value: data.orp, unit: 'mV', data: data.data, hora: data.hora },
+      do: { value: data.do_mg, unit: 'mg/l', data: data.data, hora: data.hora },
+      doSat: { value: data.do_sat, unit: '%', data: data.data, hora: data.hora },
+      turbidez: { value: data.turbidez, unit: 'NTU', data: data.data, hora: data.hora },
+      focieritrina: { value: data.focieritrina, unit: 'ug/l', data: data.data, hora: data.hora },
+      focieritrinaRFU: { value: data.focieritrina_rfu, unit: 'RFU', data: data.data, hora: data.hora },
+      clorofila: { value: data.clorofila, unit: 'ug/l', data: data.data, hora: data.hora },
+      clorofilaRFU: { value: data.clorofila_rfu, unit: 'RFU', data: data.data, hora: data.hora },
+      profundidade: { value: data.profundidade, unit: 'm', data: data.data, hora: data.hora },
+    };
 
     return NextResponse.json(measurements);
   } catch (error) {
