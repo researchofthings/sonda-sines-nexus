@@ -366,7 +366,7 @@ export default function MeasurementsPage() {
               <div className="gqi-container">
                 <div className="gqi-card">
                   <div className="gqi-header">
-                    <h3>Global Quality Index</h3>
+                    <h3>Easy to Read Quality Indicator</h3>
                     <button className="about-button" onClick={() => setShowAbout(true)}>
                       About
                     </button>
@@ -588,7 +588,7 @@ export default function MeasurementsPage() {
         <div className="modal-overlay" onClick={() => setShowAbout(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>About Global Quality Index</h2>
+              <h2>About Easy to Read Quality Indicator</h2>
               <button className="modal-close" onClick={() => setShowAbout(false)}>
                 ×
               </button>
@@ -608,9 +608,9 @@ export default function MeasurementsPage() {
               </div>
               
               <div className="about-section">
-                <h3>Global Quality Index Formula</h3>
+                <h3>Easy to Read Quality Indicator Formula</h3>
                 <p>
-                  The Global Quality Index (GQI) is calculated using a weighted aggregation of seven key water quality parameters:
+                  The Easy to Read Quality Indicator (ERQI) is calculated using a weighted aggregation of seven key water quality parameters:
                 </p>
                 <div className="formula-list">
                   <div><strong>DO Saturation (%):</strong> Weight 25% - Optimal range: 80% ±5%</div>
@@ -623,7 +623,7 @@ export default function MeasurementsPage() {
                 </div>
                 <p className="formula-note">
                   Each parameter is normalized to a 0-1 scale based on its optimal range, then multiplied by its weight. 
-                  The sum is multiplied by 100 to get the final GQI score (0-100).
+                  The sum is multiplied by 100 to get the final ERQI score (0-100).
                 </p>
               </div>
               
