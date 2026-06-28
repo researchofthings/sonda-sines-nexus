@@ -43,7 +43,7 @@ export const measurementLabels: Record<keyof MeasurementData, string> = {
   hora: 'Time',
   temperatura: 'Temperature',
   condutividade: 'Conductivity',
-  spCondutividade: 'SP Conductivity',
+  spCondutividade: 'SpConductivity (25ºC)',
   salinidade: 'Salinity',
   tds: 'Total Dissolved Solids',
   ph: 'pH',

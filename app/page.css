@@ -738,6 +738,35 @@
   font-weight: 500;
   line-height: 1.4;
   padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.gqi-status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.gqi-status-badge.normal {
+  background: #22c55e;
+  color: white;
+}
+
+.gqi-status-badge.alert {
+  background: #eab308;
+  color: white;
+}
+
+.gqi-status-badge.critical {
+  background: #ef4444;
+  color: white;
 }
 
 /* About Modal Styles */

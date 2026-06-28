@@ -375,9 +375,14 @@ export default function MeasurementsPage() {
                     {gqi.index}
                   </div>
                   <div className="gqi-classification-current">
-                    {gqi.classification === 'Normal' && 'Good. Within expected environmental standards.'}
-                    {gqi.classification === 'Alert' && 'Moderate. Potential signs of environmental stress. Investigate.'}
-                    {gqi.classification === 'Critical' && 'Poor. Environmental risk is present and action is required.'}
+                    <span>
+                      {gqi.classification === 'Normal' && 'Good. Within expected environmental standards.'}
+                      {gqi.classification === 'Alert' && 'Moderate. Potential signs of environmental stress. Investigate.'}
+                      {gqi.classification === 'Critical' && 'Poor. Environmental risk is present and action is required.'}
+                    </span>
+                    <span className={`gqi-status-badge ${gqi.classification.toLowerCase()}`}>
+                      {gqi.classification}
+                    </span>
                   </div>
                 </div>
               </div>

@@ -26,7 +26,7 @@ interface GroupedNotifications {
 const measurementLabels: Record<string, string> = {
   temperatura: 'Temperature',
   condutividade: 'Conductivity',
-  spCondutividade: 'SP Conductivity',
+  spCondutividade: 'SpConductivity (25ºC)',
   salinidade: 'Salinity',
   tds: 'Total Dissolved Solids',
   ph: 'pH',
