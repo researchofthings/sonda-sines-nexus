@@ -267,6 +267,32 @@ export default function MeasurementsPage() {
   const keys = Object.keys(measurements)
     .filter(key => key !== 'cabo' && !hiddenKeys.includes(key))
     .sort((a, b) => {
+      const order = [
+        'temperatura',
+        'doSat', 
+        'do',
+        'ph',
+        'clorofila',
+        'focieritrina',
+        'turbidez',
+        'spCondutividade',
+        'salinidade',
+        'orp',
+        'profundidade'
+      ];
+      const indexA = order.indexOf(a);
+      const indexB = order.indexOf(b);
+      
+      // If both keys are in the order array, use their positions
+      if (indexA !== -1 && indexB !== -1) {
+        return indexA - indexB;
+      }
+      
+      // If only one key is in the order array, put it first
+      if (indexA !== -1) return -1;
+      if (indexB !== -1) return 1;
+      
+      // If neither key is in the order array, sort alphabetically
       const labelA = measurementLabels[a as keyof typeof measurementLabels] || a;
       const labelB = measurementLabels[b as keyof typeof measurementLabels] || b;
       return labelA.localeCompare(labelB, 'en');
