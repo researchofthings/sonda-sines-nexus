@@ -36,7 +36,7 @@ const measurementLabels: Record<string, string> = {
   turbidez: 'Turbidity',
   focieritrina: 'Phycoerythrin',
   focieritrinaRFU: 'Phycoerythrin RFU',
-  clorofila: 'Chlorophyll',
+  clorofila: 'Chlorophyll-a',
   clorofilaRFU: 'Chlorophyll RFU',
   profundidade: 'Depth',
 };

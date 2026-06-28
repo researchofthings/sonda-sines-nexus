@@ -263,7 +263,7 @@ export default function MeasurementsPage() {
             <Droplets className="icon header-icon" />
             <div>
               <h1>Water and Ecological Quality</h1>
-              <p className="subtitle">Parametric Probe Sines Nexus - IPS</p>
+              <p className="subtitle">Multiparametric Probe - IPS - Sines Nexus -  37°56'55.4"N 8°53'18.9"W</p>
               <p className="header-description-left">Real-time values. Click a card to view history and charts.</p>
             </div>
           </div>
