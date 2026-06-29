@@ -146,11 +146,10 @@ export default function MeasurementsPage() {
     const x = value;
     switch (key) {
       case 'doSat': {
+        if (x >= 80) return 100;
         if (x < 50) return 10;
         if (x < 60) return 30;
-        if (x < 80) return 30 + (x - 60) * 2.5;
-        if (x <= 100) return 80 + (x - 80) * 1;
-        return 100;
+        return 30 + (x - 60) * 2.5;
       }
       case 'clorofila':
       case 'clorofilaRFU':
