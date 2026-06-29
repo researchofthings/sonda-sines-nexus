@@ -450,11 +450,6 @@ export default function MeasurementsPage() {
                       <span className="unit">{measurements[key].unit}</span>
                     </div>
                     <div className="card-footer">
-                      {range && (
-                        <span className={`range-badge ${inRange ? 'in-range' : 'out-of-range'}`}>
-                          Range: {range.min}-{range.max}
-                        </span>
-                      )}
                     </div>
                   </div>
                 );
