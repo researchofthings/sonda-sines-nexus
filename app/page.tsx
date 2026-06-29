@@ -653,58 +653,6 @@ export default function MeasurementsPage() {
                 <p>
                   The index is described in Deliverable D8.6.H of Sines Nexus: Roadmap_for_Easy-to-Read_Online_Georeferenced_Indicators (IPS), 2026
                 </p>
-                <div className="formula-list">
-                  <div><strong>DO Saturation (%):</strong> Weight 25%</div>
-                  <div style={{marginLeft: '20px', marginBottom: '15px'}}>
-                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
-                      <span><strong>%OD &lt; 50%</strong></span>
-                      <span>SI = 10</span>
-                    </div>
-                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
-                      <span><strong>50% ≤ %OD &lt; 60%</strong></span>
-                      <span>SI = 30</span>
-                    </div>
-                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
-                      <span><strong>60% ≤ %OD &lt; 80%</strong></span>
-                      <span>SI = 30 + (%OD - 60) × 2.5</span>
-                    </div>
-                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
-                      <span><strong>80% ≤ %OD ≤ 100%</strong></span>
-                      <span>SI = 80 + (%OD - 80) × 1</span>
-                    </div>
-                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
-                      <span><strong>%OD &gt; 100%</strong></span>
-                      <span>SI = 100</span>
-                    </div>
-                  </div>
-                  <div><strong>Chlorophyll-a (µg/L):</strong> Weight 15%</div>
-                  <div style={{marginLeft: '20px', marginBottom: '15px'}}>
-                    <span>SI = 1 - (x / 20)</span>
-                  </div>
-                  <div><strong>Turbidity (NTU):</strong> Weight 15%</div>
-                  <div style={{marginLeft: '20px', marginBottom: '15px'}}>
-                    <span>SI = 1 - (x / 80)</span>
-                  </div>
-                  <div><strong>SpConductivity (mS/cm):</strong> Weight 10%</div>
-                  <div style={{marginLeft: '20px', marginBottom: '15px'}}>
-                    <span>SI = 1 - |x - 54000| / 4000</span>
-                  </div>
-                  <div><strong>pH:</strong> Weight 15%</div>
-                  <div style={{marginLeft: '20px', marginBottom: '15px'}}>
-                    <span>SI = 1 - |x - 7.9| / 0.4</span>
-                  </div>
-                  <div><strong>Temperature (°C):</strong> Weight 10%</div>
-                  <div style={{marginLeft: '20px', marginBottom: '15px'}}>
-                    <span>SI = EXP(-((x-16.5)²)/(2×(1.5²)))</span>
-                  </div>
-                  <div><strong>ORP (mV):</strong> Weight 15%</div>
-                  <div style={{marginLeft: '20px', marginBottom: '15px'}}>
-                    <span>SI = MAX(0, MIN(1, (x − 100) / 270))</span>
-                  </div>
-                </div>
-                <p>
-                  Parameters within optimal ranges receive higher scores, while values outside these ranges receive progressively lower scores. This ensures the ERQI provides a balanced representation of water quality and ecological quality.
-                </p>
               </div>
               
               <div className="about-section">
@@ -716,23 +664,6 @@ export default function MeasurementsPage() {
                 </div>
               </div>
               
-              <div className="about-section">
-                <h3>Notification System</h3>
-                <p>
-                  The system continuously monitors all water quality parameters and generates notifications when values fall 
-                  outside their optimal ranges.
-                </p>
-                <p>
-                  The notification bell in the header displays the total count of alerts generated during the last 7 days, 
-                  providing a quick overview of recent water quality issues.
-                </p>
-                <div className="notification-list">
-                  <div><strong>Green indicators (SI ≥ 70):</strong> Parameter in good condition</div>
-                  <div><strong>Yellow indicators (SI 50–69):</strong> Parameter showing moderate stress — investigate</div>
-                  <div><strong>Red indicators (SI &lt; 50):</strong> Parameter in critical condition — action required</div>
-                  <div><strong>Click the bell:</strong> View detailed notification history and parameter status</div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
