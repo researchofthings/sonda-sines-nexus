@@ -597,13 +597,10 @@ export default function MeasurementsPage() {
               <div className="about-section">
                 <h3>Sines Nexus Project</h3>
                 <p>
-                  This dashboard is part of the Sines Nexus project, a comprehensive water quality monitoring system 
-                  for the coastal waters of the Port of Sines, Portugal.
+                  This dashboard is part of the Sines Nexus project, a comprehensive water and ecological quality monitoring system for the coastal waters of the Port of Sines, Portugal.
                 </p>
                 <p>
-                  The system provides real-time monitoring of key environmental parameters to ensure the health and safety 
-                  of marine ecosystems. The monitoring probe is strategically located at coordinates 37°56'55.4"N 8°53'18.9"W 
-                  in the Port of Sines.
+                  The system provides real-time monitoring of key environmental parameters to ensure the health and safety of marine ecosystems. The monitoring probe is strategically located at coordinates 37°56'55.4"N 8°53'18.9"W in the Port of Sines.
                 </p>
                 <p>
                   Operated by: IPS - Instituto Politécnico de Setúbal
@@ -613,25 +610,25 @@ export default function MeasurementsPage() {
               <div className="about-section">
                 <h3>Easy to Read Quality Indicator</h3>
                 <p>
-                  The Easy to Read Quality Indicator (ERQI) provides a comprehensive assessment of water quality using 
-                  a weighted aggregation of seven key water quality parameters.
+                  The Easy to Read Quality Indicator (ERQI) provides a comprehensive assessment of water and ecological quality using a weighted aggregation of seven key water quality parameters.
                 </p>
                 <p>
-                  Each parameter is normalized to a 0-1 scale based on how close it is to its optimal range, then multiplied 
-                  by its specific weight contribution. The final score is multiplied by 100 for a 0-100 scale.
+                  Each parameter is normalized to how close it is to its optimal range, then multiplied by its specific weight contribution. The final score is between 0-100, being 100 the optimum water and ecological quality.
+                </p>
+                <p>
+                  The index is described in Deliverable D8.6.H of Sines Nexus: Roadmap_for_Easy-to-Read_Online_Georeferenced_Indicators (IPS), 2026
                 </p>
                 <div className="formula-list">
-                  <div><strong>DO Saturation (%):</strong> Weight 25% - Optimal range: 80% ±5%</div>
-                  <div><strong>Chlorophyll-a (µg/L):</strong> Weight 15% - Optimal range: 0-20 µg/L</div>
-                  <div><strong>Turbidity (NTU):</strong> Weight 15% - Optimal range: 0-20 NTU</div>
-                  <div><strong>SpConductivity (mS/cm):</strong> Weight 10% - Optimal range: 56 ±2 mS/cm</div>
-                  <div><strong>pH:</strong> Weight 15% - Optimal range: 7.9 ±0.4</div>
-                  <div><strong>Temperature (°C):</strong> Weight 10% - Optimal range: 16.5 ±3.5°C</div>
-                  <div><strong>ORP (mV):</strong> Weight 15% - Optimal range: 100-370 mV (linear scaling)</div>
+                  <div><strong>DO Saturation (%):</strong> Weight 25% - Individual contribution: Score × 0.25</div>
+                  <div><strong>Chlorophyll-a (µg/L):</strong> Weight 15% - Individual contribution: Score × 0.15</div>
+                  <div><strong>Turbidity (NTU):</strong> Weight 15% - Individual contribution: Score × 0.15</div>
+                  <div><strong>SpConductivity (mS/cm):</strong> Weight 10% - Individual contribution: Score × 0.10</div>
+                  <div><strong>pH:</strong> Weight 15% - Individual contribution: Score × 0.15</div>
+                  <div><strong>Temperature (°C):</strong> Weight 10% - Individual contribution: Score × 0.10</div>
+                  <div><strong>ORP (mV):</strong> Weight 15% - Individual contribution: Score × 0.15</div>
                 </div>
                 <p>
-                  Parameters within optimal ranges receive higher scores, while values outside these ranges receive 
-                  progressively lower scores. This ensures the ERQI provides a balanced representation of water quality.
+                  Parameters within optimal ranges receive higher scores, while values outside these ranges receive progressively lower scores. This ensures the ERQI provides a balanced representation of water quality and ecological quality.
                 </p>
               </div>
               
