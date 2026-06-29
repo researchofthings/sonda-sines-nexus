@@ -619,7 +619,32 @@ export default function MeasurementsPage() {
                   The index is described in Deliverable D8.6.H of Sines Nexus: Roadmap_for_Easy-to-Read_Online_Georeferenced_Indicators (IPS), 2026
                 </p>
                 <div className="formula-list">
-                  <div><strong>DO Saturation (%):</strong> Weight 25% - f(x) = max(0;min(1;(SE(x&lt;50;10;SE(x&lt;60;30;SE(x&lt;80;30+(x-60)*2,5;SE(x&lt;=100;80+(x-80)*1;100)))-10)/90))) → f(105.8) = 1.00 → contribution: 1.00 × 0.25 = 0.25</div>
+                  <div><strong>DO Saturation (%):</strong> Weight 25% - Sub-index Equation (IQ)</div>
+                  <div style={{marginLeft: '20px', marginBottom: '10px'}}>
+                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                      <span><strong>%OD &lt; 50%</strong></span>
+                      <span>IQ = 10</span>
+                    </div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                      <span><strong>50% ≤ %OD &lt; 60%</strong></span>
+                      <span>IQ = 30</span>
+                    </div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                      <span><strong>60% ≤ %OD &lt; 80%</strong></span>
+                      <span>IQ = 30 + (%OD - 60) × 2.5</span>
+                    </div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                      <span><strong>80% ≤ %OD ≤ 100%</strong></span>
+                      <span>IQ = 80 + (%OD - 80) × 1</span>
+                    </div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                      <span><strong>%OD &gt; 100%</strong></span>
+                      <span>IQ = 100</span>
+                    </div>
+                    <div style={{marginTop: '10px', fontStyle: 'italic'}}>
+                      Final: f(105.8) = 1.00 → contribution: 1.00 × 0.25 = 0.25
+                    </div>
+                  </div>
                   <div><strong>Chlorophyll-a (µg/L):</strong> Weight 15% - f(-0.16) = 0.998 → contribution: 0.998 × 0.15 = 0.1497</div>
                   <div><strong>Turbidity (NTU):</strong> Weight 15% - f(1.23) = 0.985 → contribution: 0.985 × 0.15 = 0.1477</div>
                   <div><strong>SpConductivity (mS/cm):</strong> Weight 10% - f(54.49) = 0.998 → contribution: 0.998 × 0.10 = 0.0998</div>
