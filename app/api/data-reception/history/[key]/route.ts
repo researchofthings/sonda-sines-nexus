@@ -55,7 +55,7 @@ export async function GET(
       .map((row) => {
         const r = row as Record<string, unknown>;
         return {
-          value: Number(r[column]),
+          value: r[column] != null ? Number(r[column]) : 0,
           timestamp: String(r.created_at),
           data: String(r.data),
           hora: String(r.hora),

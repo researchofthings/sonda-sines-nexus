@@ -185,21 +185,21 @@ export async function GET() {
       data: string;
       hora: string;
     }> = {
-      temperatura: { value: data.temperatura, unit: 'ºC', data: data.data, hora: data.hora },
-      condutividade: { value: data.condutividade, unit: 'mS/cm', data: data.data, hora: data.hora },
-      spCondutividade: { value: data.sp_condutividade, unit: 'mS/cm', data: data.data, hora: data.hora },
-      salinidade: { value: data.salinidade, unit: 'PSU', data: data.data, hora: data.hora },
-      tds: { value: data.tds, unit: 'mg/l', data: data.data, hora: data.hora },
-      ph: { value: data.ph, unit: '', data: data.data, hora: data.hora },
-      orp: { value: data.orp, unit: 'mV', data: data.data, hora: data.hora },
-      do: { value: data.do_mg, unit: 'mg/l', data: data.data, hora: data.hora },
-      doSat: { value: data.do_sat, unit: '%', data: data.data, hora: data.hora },
-      turbidez: { value: data.turbidez, unit: 'NTU', data: data.data, hora: data.hora },
-      focieritrina: { value: data.focieritrina, unit: 'ug/l', data: data.data, hora: data.hora },
-      focieritrinaRFU: { value: data.focieritrina_rfu, unit: 'RFU', data: data.data, hora: data.hora },
-      clorofila: { value: data.clorofila, unit: 'ug/l', data: data.data, hora: data.hora },
-      clorofilaRFU: { value: data.clorofila_rfu, unit: 'RFU', data: data.data, hora: data.hora },
-      profundidade: { value: data.profundidade, unit: 'm', data: data.data, hora: data.hora },
+      temperatura: { value: data.temperatura ?? 0, unit: 'ºC', data: data.data, hora: data.hora },
+      condutividade: { value: data.condutividade ?? 0, unit: 'mS/cm', data: data.data, hora: data.hora },
+      spCondutividade: { value: data.sp_condutividade ?? 0, unit: 'mS/cm', data: data.data, hora: data.hora },
+      salinidade: { value: data.salinidade ?? 0, unit: 'PSU', data: data.data, hora: data.hora },
+      tds: { value: data.tds ?? 0, unit: 'mg/l', data: data.data, hora: data.hora },
+      ph: { value: data.ph ?? 0, unit: '', data: data.data, hora: data.hora },
+      orp: { value: data.orp ?? 0, unit: 'mV', data: data.data, hora: data.hora },
+      do: { value: data.do_mg ?? 0, unit: 'mg/l', data: data.data, hora: data.hora },
+      doSat: { value: data.do_sat ?? 0, unit: '%', data: data.data, hora: data.hora },
+      turbidez: { value: data.turbidez ?? 0, unit: 'NTU', data: data.data, hora: data.hora },
+      focieritrina: { value: data.focieritrina ?? 0, unit: 'ug/l', data: data.data, hora: data.hora },
+      focieritrinaRFU: { value: data.focieritrina_rfu ?? 0, unit: 'RFU', data: data.data, hora: data.hora },
+      clorofila: { value: data.clorofila ?? 0, unit: 'ug/l', data: data.data, hora: data.hora },
+      clorofilaRFU: { value: data.clorofila_rfu ?? 0, unit: 'RFU', data: data.data, hora: data.hora },
+      profundidade: { value: data.profundidade ?? 0, unit: 'm', data: data.data, hora: data.hora },
     };
 
     return NextResponse.json(measurements);
