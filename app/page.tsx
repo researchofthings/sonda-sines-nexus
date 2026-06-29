@@ -642,16 +642,13 @@ export default function MeasurementsPage() {
                       <span>IQ = 100</span>
                     </div>
                                       </div>
-                  <div><strong>Chlorophyll-a (µg/L):</strong> Weight 15% - Formula available in Deliverable D8.6.H</div>
-                  <div><strong>Turbidity (NTU):</strong> Weight 15% - Formula available in Deliverable D8.6.H</div>
-                  <div><strong>SpConductivity (mS/cm):</strong> Weight 10% - Formula available in Deliverable D8.6.H</div>
-                  <div><strong>pH:</strong> Weight 15% - Formula available in Deliverable D8.6.H</div>
-                  <div><strong>Temperature (°C):</strong> Weight 10% - Formula available in Deliverable D8.6.H</div>
-                  <div><strong>ORP (mV):</strong> Weight 15% - Formula available in Deliverable D8.6.H</div>
+                  <div><strong>Chlorophyll-a (µg/L):</strong> Weight 15% - SI = 1 - (x / 20)</div>
+                  <div><strong>Turbidity (NTU):</strong> Weight 15% - SI = 1 - (x / 80)</div>
+                  <div><strong>SpConductivity (mS/cm):</strong> Weight 10% - SI = 1 - |x - 54000| / 4000</div>
+                  <div><strong>pH:</strong> Weight 15% - SI = 1 - |x - 7.9| / 0.4</div>
+                  <div><strong>Temperature (°C):</strong> Weight 10% - SI = EXP(-((x-16.5)²)/(2*(1.5²)))</div>
+                  <div><strong>ORP (mV):</strong> Weight 15% - SI = MAX(0, MIN(1, (x − 100) / 270))</div>
                 </div>
-                <p>
-                  <em>Note: Only the DO Saturation formula is currently available. The complete mathematical formulas for all other parameters are detailed in Deliverable D8.6.H with their respective interval-based conditional logic.</em>
-                </p>
                 <p>
                   Parameters within optimal ranges receive higher scores, while values outside these ranges receive progressively lower scores. This ensures the ERQI provides a balanced representation of water quality and ecological quality.
                 </p>
