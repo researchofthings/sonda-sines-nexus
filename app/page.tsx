@@ -641,19 +641,16 @@ export default function MeasurementsPage() {
                       <span><strong>%OD &gt; 100%</strong></span>
                       <span>IQ = 100</span>
                     </div>
-                    <div style={{marginTop: '10px', fontStyle: 'italic'}}>
-                      Final: f(105.8) = 1.00 → contribution: 1.00 × 0.25 = 0.25
-                    </div>
-                  </div>
-                  <div><strong>Chlorophyll-a (µg/L):</strong> Weight 15% - f(-0.16) = 0.998 → contribution: 0.998 × 0.15 = 0.1497</div>
-                  <div><strong>Turbidity (NTU):</strong> Weight 15% - f(1.23) = 0.985 → contribution: 0.985 × 0.15 = 0.1477</div>
-                  <div><strong>SpConductivity (mS/cm):</strong> Weight 10% - f(54.49) = 0.998 → contribution: 0.998 × 0.10 = 0.0998</div>
-                  <div><strong>pH:</strong> Weight 15% - f(7.94) = 0.90 → contribution: 0.90 × 0.15 = 0.135</div>
-                  <div><strong>Temperature (°C):</strong> Weight 10% - f(16.4) = 0.999 → contribution: 0.999 × 0.10 = 0.0999</div>
-                  <div><strong>ORP (mV):</strong> Weight 15% - f(302.4) = 0.750 → contribution: 0.750 × 0.15 = 0.1125</div>
+                                      </div>
+                  <div><strong>Chlorophyll-a (µg/L):</strong> Weight 15% - Formula available in Deliverable D8.6.H</div>
+                  <div><strong>Turbidity (NTU):</strong> Weight 15% - Formula available in Deliverable D8.6.H</div>
+                  <div><strong>SpConductivity (mS/cm):</strong> Weight 10% - Formula available in Deliverable D8.6.H</div>
+                  <div><strong>pH:</strong> Weight 15% - Formula available in Deliverable D8.6.H</div>
+                  <div><strong>Temperature (°C):</strong> Weight 10% - Formula available in Deliverable D8.6.H</div>
+                  <div><strong>ORP (mV):</strong> Weight 15% - Formula available in Deliverable D8.6.H</div>
                 </div>
                 <p>
-                  <em>Note: The complete mathematical formulas for all parameters are detailed in Deliverable D8.6.H. The DO Saturation formula above uses interval-based conditional logic (SE = IF/THEN statements).</em>
+                  <em>Note: Only the DO Saturation formula is currently available. The complete mathematical formulas for all other parameters are detailed in Deliverable D8.6.H with their respective interval-based conditional logic.</em>
                 </p>
                 <p>
                   Parameters within optimal ranges receive higher scores, while values outside these ranges receive progressively lower scores. This ensures the ERQI provides a balanced representation of water quality and ecological quality.
