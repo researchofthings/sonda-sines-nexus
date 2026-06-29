@@ -155,6 +155,43 @@ export default function MeasurementsPage() {
     return value >= range.min && value <= range.max;
   };
 
+  const calculateSI = (key: string, value: number): number | null => {
+    const x = value;
+    switch (key) {
+      case 'do_sat': {
+        let iq: number;
+        if (x < 50) iq = 10;
+        else if (x < 60) iq = 30;
+        else if (x < 80) iq = 30 + (x - 60) * 2.5;
+        else if (x <= 100) iq = 80 + (x - 80) * 1;
+        else iq = 100;
+        return Math.max(0, Math.min(1, (iq - 10) / 90));
+      }
+      case 'clorofila':
+        return Math.max(0, Math.min(1, 1 - (x / 20)));
+      case 'turbidez':
+        return Math.max(0, Math.min(1, 1 - (x / 80)));
+      case 'sp_condutividade':
+        return Math.max(0, Math.min(1, 1 - Math.abs(x * 1000 - 54000) / 4000));
+      case 'ph':
+        return Math.max(0, Math.min(1, 1 - Math.abs(x - 7.9) / 0.4));
+      case 'temperatura':
+        return Math.max(0, Math.min(1, Math.exp(-Math.pow(x - 16.5, 2) / (2 * Math.pow(1.5, 2)))));
+      case 'orp':
+        return Math.max(0, Math.min(1, (x - 100) / 270));
+      default:
+        return null;
+    }
+  };
+
+  const getSIColor = (si: number | null): 'si-normal' | 'si-alert' | 'si-critical' | 'no-range' => {
+    if (si === null) return 'no-range';
+    const score = si * 100;
+    if (score >= 70) return 'si-normal';
+    if (score >= 50) return 'si-alert';
+    return 'si-critical';
+  };
+
   // Parse YYYY-MM-DD format from database to Date object
   const parseDate = (dateStr: string, timeStr: string): Date => {
     const [year, month, day] = dateStr.split('-').map(Number);
@@ -394,10 +431,8 @@ export default function MeasurementsPage() {
                 const range = measurementRanges[key as keyof typeof measurementRanges];
                 const hasRange = !!range;
                 const inRange = hasRange ? isInRange(key, measurements[key].value) : null;
-                let indicatorClass = 'no-range';
-                if (hasRange) {
-                  indicatorClass = inRange ? 'in-range' : 'out-of-range';
-                }
+                const si = calculateSI(key, measurements[key].value);
+                const indicatorClass = getSIColor(si);
                 
                 return (
                   <div
@@ -408,7 +443,7 @@ export default function MeasurementsPage() {
                     <div className="card-header">
                       {measurementIcons[key] || <Activity className="icon" />}
                       <h3 className="card-title">{key === 'ph' ? (<><span style={{textTransform:'none'}}>p</span>H</>) : (measurementLabels[key as keyof typeof measurementLabels] || key)}</h3>
-                      <span className={`status-indicator ${indicatorClass}`} title={hasRange ? (inRange ? 'Within range' : 'Out of range') : 'No range defined'}></span>
+                      <span className={`status-indicator ${indicatorClass}`} title={si !== null ? `SI = ${(si * 100).toFixed(1)} — ${indicatorClass === 'si-normal' ? 'Normal' : indicatorClass === 'si-alert' ? 'Alert' : 'Critical'}` : 'No index defined'}></span>
                     </div>
                     <div className="card-value">
                       {formatValue(measurements[key].value, key)}
@@ -692,8 +727,9 @@ export default function MeasurementsPage() {
                   providing a quick overview of recent water quality issues.
                 </p>
                 <div className="notification-list">
-                  <div><strong>Green indicators:</strong> Individual parameters within normal ranges</div>
-                  <div><strong>Red indicators:</strong> Individual parameters outside normal ranges requiring attention</div>
+                  <div><strong>Green indicators (SI ≥ 70):</strong> Parameter in good condition</div>
+                  <div><strong>Yellow indicators (SI 50–69):</strong> Parameter showing moderate stress — investigate</div>
+                  <div><strong>Red indicators (SI &lt; 50):</strong> Parameter in critical condition — action required</div>
                   <div><strong>Click the bell:</strong> View detailed notification history and parameter status</div>
                 </div>
               </div>

@@ -71,6 +71,7 @@ const columnMap = {
   'Data': 'data',
   'Hora': 'hora',
   'Temperatura ºC': 'temperatura',
+  'Temperatura �C': 'temperatura',
   'Condutividade mS/cm': 'condutividade',
   'SpCondutividade mS/cm': 'sp_condutividade',
   'Salinidade PSU': 'salinidade',
