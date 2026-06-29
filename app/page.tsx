@@ -159,26 +159,24 @@ export default function MeasurementsPage() {
     const x = value;
     switch (key) {
       case 'do_sat': {
-        let iq: number;
-        if (x < 50) iq = 10;
-        else if (x < 60) iq = 30;
-        else if (x < 80) iq = 30 + (x - 60) * 2.5;
-        else if (x <= 100) iq = 80 + (x - 80) * 1;
-        else iq = 100;
-        return Math.max(0, Math.min(1, (iq - 10) / 90));
+        if (x < 50) return 10;
+        if (x < 60) return 30;
+        if (x < 80) return 30 + (x - 60) * 2.5;
+        if (x <= 100) return 80 + (x - 80) * 1;
+        return 100;
       }
       case 'clorofila':
-        return Math.max(0, Math.min(1, 1 - (x / 20)));
+        return Math.max(0, Math.min(100, (1 - (x / 20)) * 100));
       case 'turbidez':
-        return Math.max(0, Math.min(1, 1 - (x / 80)));
+        return Math.max(0, Math.min(100, (1 - (x / 80)) * 100));
       case 'sp_condutividade':
-        return Math.max(0, Math.min(1, 1 - Math.abs(x * 1000 - 54000) / 4000));
+        return Math.max(0, Math.min(100, (1 - Math.abs(x * 1000 - 54000) / 4000) * 100));
       case 'ph':
-        return Math.max(0, Math.min(1, 1 - Math.abs(x - 7.9) / 0.4));
+        return Math.max(0, Math.min(100, (1 - Math.abs(x - 7.9) / 0.4) * 100));
       case 'temperatura':
-        return Math.max(0, Math.min(1, Math.exp(-Math.pow(x - 16.5, 2) / (2 * Math.pow(1.5, 2)))));
+        return Math.max(0, Math.min(100, Math.exp(-Math.pow(x - 16.5, 2) / (2 * Math.pow(1.5, 2))) * 100));
       case 'orp':
-        return Math.max(0, Math.min(1, (x - 100) / 270));
+        return Math.max(0, Math.min(100, ((x - 100) / 270) * 100));
       default:
         return null;
     }
@@ -186,9 +184,8 @@ export default function MeasurementsPage() {
 
   const getSIColor = (si: number | null): 'si-normal' | 'si-alert' | 'si-critical' | 'no-range' => {
     if (si === null) return 'no-range';
-    const score = si * 100;
-    if (score >= 70) return 'si-normal';
-    if (score >= 50) return 'si-alert';
+    if (si >= 70) return 'si-normal';
+    if (si >= 50) return 'si-alert';
     return 'si-critical';
   };
 
@@ -443,7 +440,7 @@ export default function MeasurementsPage() {
                     <div className="card-header">
                       {measurementIcons[key] || <Activity className="icon" />}
                       <h3 className="card-title">{key === 'ph' ? (<><span style={{textTransform:'none'}}>p</span>H</>) : (measurementLabels[key as keyof typeof measurementLabels] || key)}</h3>
-                      <span className={`status-indicator ${indicatorClass}`} title={si !== null ? `SI = ${(si * 100).toFixed(1)} — ${indicatorClass === 'si-normal' ? 'Normal' : indicatorClass === 'si-alert' ? 'Alert' : 'Critical'}` : 'No index defined'}></span>
+                      <span className={`status-indicator ${indicatorClass}`} title={si !== null ? `SI = ${si.toFixed(1)} — ${indicatorClass === 'si-normal' ? 'Normal' : indicatorClass === 'si-alert' ? 'Alert' : 'Critical'}` : 'No index defined'}></span>
                     </div>
                     <div className="card-value">
                       {formatValue(measurements[key].value, key)}
