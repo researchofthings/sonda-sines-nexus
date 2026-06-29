@@ -62,12 +62,10 @@ export default function MeasurementsPage() {
   // Fetch measurements and notifications
   useEffect(() => {
     fetchMeasurements();
-    fetchNotificationCount();
     setConnected(true);
     
     const interval = setInterval(() => {
       fetchMeasurements();
-      fetchNotificationCount();
     }, 5000);
 
     return () => clearInterval(interval);
@@ -101,17 +99,6 @@ export default function MeasurementsPage() {
     }
   };
 
-  const fetchNotificationCount = async () => {
-    try {
-      const res = await fetch('/api/notifications?days=7');
-      const data = await res.json();
-      if (data.count !== undefined) {
-        setNotificationCount(data.count);
-      }
-    } catch (err) {
-      console.error('Failed to fetch notification count:', err);
-    }
-  };
 
   const fetchHistory = useCallback(async (key: string) => {
     try {
