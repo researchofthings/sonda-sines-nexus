@@ -158,7 +158,7 @@ export default function MeasurementsPage() {
   const calculateSI = (key: string, value: number): number | null => {
     const x = value;
     switch (key) {
-      case 'do_sat': {
+      case 'doSat': {
         if (x < 50) return 10;
         if (x < 60) return 30;
         if (x < 80) return 30 + (x - 60) * 2.5;
@@ -166,10 +166,11 @@ export default function MeasurementsPage() {
         return 100;
       }
       case 'clorofila':
+      case 'clorofilaRFU':
         return Math.max(0, Math.min(100, (1 - (x / 20)) * 100));
       case 'turbidez':
         return Math.max(0, Math.min(100, (1 - (x / 80)) * 100));
-      case 'sp_condutividade':
+      case 'spCondutividade':
         return Math.max(0, Math.min(100, (1 - Math.abs(x * 1000 - 54000) / 4000) * 100));
       case 'ph':
         return Math.max(0, Math.min(100, (1 - Math.abs(x - 7.9) / 0.4) * 100));
