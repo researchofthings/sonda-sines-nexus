@@ -619,13 +619,13 @@ export default function MeasurementsPage() {
                   The index is described in Deliverable D8.6.H of Sines Nexus: Roadmap_for_Easy-to-Read_Online_Georeferenced_Indicators (IPS), 2026
                 </p>
                 <div className="formula-list">
-                  <div><strong>DO Saturation (%):</strong> Weight 25% - Example: 105.8% → f(105.8) = 1.00 → contribution: 1.00 × 0.25 = 0.25</div>
-                  <div><strong>Chlorophyll-a (µg/L):</strong> Weight 15% - Example: -0.16 µg/L → f(-0.16) = 0.998 → contribution: 0.998 × 0.15 = 0.1497</div>
-                  <div><strong>Turbidity (NTU):</strong> Weight 15% - Example: 1.23 NTU → f(1.23) = 0.985 → contribution: 0.985 × 0.15 = 0.1477</div>
-                  <div><strong>SpConductivity (mS/cm):</strong> Weight 10% - Example: 54.49 mS/cm → f(54.49) = 0.998 → contribution: 0.998 × 0.10 = 0.0998</div>
-                  <div><strong>pH:</strong> Weight 15% - Example: 7.94 → f(7.94) = 0.90 → contribution: 0.90 × 0.15 = 0.135</div>
-                  <div><strong>Temperature (°C):</strong> Weight 10% - Example: 16.4°C → f(16.4) = 0.999 → contribution: 0.999 × 0.10 = 0.0999</div>
-                  <div><strong>ORP (mV):</strong> Weight 15% - Example: 302.4 mV → f(302.4) = 0.750 → contribution: 0.750 × 0.15 = 0.1125</div>
+                  <div><strong>DO Saturation (%):</strong> Weight 25% - f(x) = min(1, max(0, 1 - |x-80|/20)) → f(105.8) = 1.00 → contribution: 1.00 × 0.25 = 0.25</div>
+                  <div><strong>Chlorophyll-a (µg/L):</strong> Weight 15% - f(x) = min(1, max(0, 1 - x/20)) → f(-0.16) = 0.998 → contribution: 0.998 × 0.15 = 0.1497</div>
+                  <div><strong>Turbidity (NTU):</strong> Weight 15% - f(x) = min(1, max(0, 1 - x/20)) → f(1.23) = 0.985 → contribution: 0.985 × 0.15 = 0.1477</div>
+                  <div><strong>SpConductivity (mS/cm):</strong> Weight 10% - f(x) = min(1, max(0, 1 - |x-56|/4)) → f(54.49) = 0.998 → contribution: 0.998 × 0.10 = 0.0998</div>
+                  <div><strong>pH:</strong> Weight 15% - f(x) = min(1, max(0, 1 - |x-7.9|/0.8)) → f(7.94) = 0.90 → contribution: 0.90 × 0.15 = 0.135</div>
+                  <div><strong>Temperature (°C):</strong> Weight 10% - f(x) = min(1, max(0, 1 - |x-16.5|/7)) → f(16.4) = 0.999 → contribution: 0.999 × 0.10 = 0.0999</div>
+                  <div><strong>ORP (mV):</strong> Weight 15% - f(x) = (x-100)/(370-100) for 100≤x≤370 → f(302.4) = 0.750 → contribution: 0.750 × 0.15 = 0.1125</div>
                 </div>
                 <p>
                   Parameters within optimal ranges receive higher scores, while values outside these ranges receive progressively lower scores. This ensures the ERQI provides a balanced representation of water quality and ecological quality.
