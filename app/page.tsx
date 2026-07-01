@@ -124,6 +124,64 @@ export default function MeasurementsPage() {
     return withTimestamp.filter(e => parseDate(e.data, e.hora).getTime() >= cutoff);
   };
 
+  const downloadAllHistory = async () => {
+    try {
+      // Fetch full measurements history
+      const res = await fetch('/api/data-reception/history/temperatura');
+      const tempData = await res.json();
+      const dates = (tempData.history || []).map((e: {data: string; hora: string}) => ({ data: e.data, hora: e.hora }));
+
+      // Fetch all parameter histories in parallel
+      const keys = ['temperatura','doSat','do','ph','clorofila','turbidez','spCondutividade','salinidade','orp','profundidade','focieritrina'];
+      const results = await Promise.all(keys.map(k => fetch(`/api/data-reception/history/${k}`).then(r => r.json())));
+
+      // Fetch ERQI history
+      const erqiRes = await fetch('/api/erqi-history');
+      const erqiData = await erqiRes.json();
+      const erqiMap: Record<string, number> = {};
+      (erqiData.history || []).forEach((e: {data: string; hora: string; erqi: number}) => {
+        erqiMap[`${e.data}_${e.hora}`] = e.erqi;
+      });
+
+      // Build value maps per key
+      const valueMaps: Record<string, Record<string, number>> = {};
+      keys.forEach((k, i) => {
+        valueMaps[k] = {};
+        (results[i].history || []).forEach((e: {data: string; hora: string; value: number}) => {
+          valueMaps[k][`${e.data}_${e.hora}`] = e.value;
+        });
+      });
+
+      // Build rows using temperatura timestamps as reference
+      const rows = dates.map((d: {data: string; hora: string}) => {
+        const key = `${d.data}_${d.hora}`;
+        return {
+          'Date': d.data.split('-').reverse().join('-'),
+          'Time': d.hora,
+          'Temperature (ºC)': valueMaps['temperatura'][key] ?? '',
+          'DO Sat (%)': valueMaps['doSat'][key] ?? '',
+          'DO (mg/l)': valueMaps['do'][key] ?? '',
+          'pH': valueMaps['ph'][key] ?? '',
+          'Chlorophyll-a (ug/l)': valueMaps['clorofila'][key] ?? '',
+          'Turbidity (NTU)': valueMaps['turbidez'][key] ?? '',
+          'SpConductivity (mS/cm)': valueMaps['spCondutividade'][key] ?? '',
+          'Salinity (PSU)': valueMaps['salinidade'][key] ?? '',
+          'ORP (mV)': valueMaps['orp'][key] ?? '',
+          'Depth (m)': valueMaps['profundidade'][key] ?? '',
+          'Phycoerythrin (ug/l)': valueMaps['focieritrina'][key] ?? '',
+          'ERQI': erqiMap[key] ?? '',
+        };
+      });
+
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(rows);
+      XLSX.utils.book_append_sheet(wb, ws, 'All Data');
+      XLSX.writeFile(wb, `sines_nexus_all_data_${new Date().toISOString().split('T')[0]}.xlsx`);
+    } catch (err) {
+      console.error('Failed to download all history:', err);
+    }
+  };
+
   const fetchErqiHistory = useCallback(async () => {
     try {
       const res = await fetch('/api/erqi-history');
@@ -376,6 +434,9 @@ export default function MeasurementsPage() {
                   <span className="notification-badge-inline">{notificationCount}</span>
                 )}
               </Link>
+              <button className="about-icon-button" onClick={downloadAllHistory} title="Download all history as Excel">
+                <Download className="icon" />
+              </button>
               <button className="about-icon-button" onClick={() => setShowAbout(true)} title="About Easy to Read Quality Indicator">
                 <Info className="icon" />
               </button>
