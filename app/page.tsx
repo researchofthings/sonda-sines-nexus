@@ -59,6 +59,9 @@ export default function MeasurementsPage() {
   const [showAbout, setShowAbout] = useState<boolean>(false);
   const [showErqiHistory, setShowErqiHistory] = useState<boolean>(false);
   const [erqiHistory, setErqiHistory] = useState<{data: string; hora: string; erqi: number}[]>([]);
+  const [erqiTimeRange, setErqiTimeRange] = useState<'1h' | '12h' | '1d' | '1w' | '15d' | '1m' | 'custom'>('1d');
+  const [erqiStartDate, setErqiStartDate] = useState<string>('');
+  const [erqiEndDate, setErqiEndDate] = useState<string>('');
   const chartRef = useRef<HTMLDivElement>(null);
 
   // Fetch measurements and notifications
@@ -101,6 +104,25 @@ export default function MeasurementsPage() {
     }
   };
 
+
+  const getFilteredErqiHistory = () => {
+    if (!erqiHistory.length) return [];
+    const withTimestamp = erqiHistory.map(e => ({
+      ...e,
+      timestamp: parseDate(e.data, e.hora).toISOString(),
+    }));
+    if (erqiTimeRange === 'custom' && erqiStartDate && erqiEndDate) {
+      const start = new Date(erqiStartDate).getTime();
+      const end = new Date(erqiEndDate).getTime() + (24 * 60 * 60 * 1000 - 1);
+      return withTimestamp.filter(e => parseDate(e.data, e.hora).getTime() >= start && parseDate(e.data, e.hora).getTime() <= end);
+    }
+    const mostRecent = withTimestamp[0];
+    const referenceTime = parseDate(mostRecent.data, mostRecent.hora).getTime();
+    const hoursMap: Record<string, number> = { '1h': 1, '12h': 12, '1d': 24, '1w': 168, '15d': 360, '1m': 720 };
+    const hoursBack = hoursMap[erqiTimeRange] ?? 24;
+    const cutoff = referenceTime - hoursBack * 60 * 60 * 1000;
+    return withTimestamp.filter(e => parseDate(e.data, e.hora).getTime() >= cutoff);
+  };
 
   const fetchErqiHistory = useCallback(async () => {
     try {
@@ -424,31 +446,98 @@ export default function MeasurementsPage() {
               </div>
             )}
             
-            {/* ERQI History Chart */}
-            {showErqiHistory && erqiHistory.length > 0 && (() => {
-              const chartData = [...erqiHistory].reverse().map(e => ({
-                label: `${e.data.split('-').reverse().join('-')} ${e.hora}`,
-                value: e.erqi,
-              }));
-              return (
-                <div className="history-section">
-                  <div className="history-header">
-                    <h3>Easy to Read Quality Indicator — History</h3>
-                  </div>
-                  <div className="chart-container">
-                    <ResponsiveContainer width="100%" height={300}>
-                      <LineChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                        <XAxis dataKey="label" tick={{ fontSize: 10 }} interval={Math.floor(chartData.length / 10)} />
-                        <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
-                        <Tooltip formatter={(v: number) => [v.toFixed(2), 'ERQI']} />
-                        <Line type="monotone" dataKey="value" stroke="#0284c7" dot={false} strokeWidth={2} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
+            {/* ERQI History Section */}
+            {showErqiHistory && erqiHistory.length > 0 && (
+              <div className="history-section">
+                <div className="history-header">
+                  <Clock className="icon" />
+                  <h2>History: Easy to Read Quality Indicator</h2>
                 </div>
-              );
-            })()}
+
+                {/* Date Range Selector */}
+                <div className="date-range-selector">
+                  <div className="preset-buttons">
+                    {[
+                      { key: '1h', label: '1 Hour' },
+                      { key: '12h', label: '12 Hours' },
+                      { key: '1d', label: '1 Day' },
+                      { key: '1w', label: '1 Week' },
+                      { key: '15d', label: '15 Days' },
+                      { key: '1m', label: '1 Month' },
+                      { key: 'custom', label: 'Custom' },
+                    ].map(({ key, label }) => (
+                      <button
+                        key={key}
+                        className={`time-range-btn ${erqiTimeRange === key ? 'active' : ''}`}
+                        onClick={() => setErqiTimeRange(key as any)}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  {erqiTimeRange === 'custom' && (
+                    <div className="custom-date-inputs">
+                      <label>From:<input type="date" value={erqiStartDate} onChange={e => setErqiStartDate(e.target.value)} /></label>
+                      <label>To:<input type="date" value={erqiEndDate} onChange={e => setErqiEndDate(e.target.value)} /></label>
+                    </div>
+                  )}
+                </div>
+
+                {/* Chart */}
+                <div className="chart-container">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={[...getFilteredErqiHistory()].reverse()}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis
+                        dataKey="timestamp"
+                        stroke="#64748b"
+                        tick={{ fill: '#64748b', fontSize: 11 }}
+                        angle={-30}
+                        textAnchor="end"
+                        height={70}
+                        interval="preserveStartEnd"
+                        minTickGap={30}
+                        tickFormatter={(value) => {
+                          const d = new Date(value);
+                          return `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+                        }}
+                      />
+                      <YAxis
+                        stroke="#64748b"
+                        tick={{ fill: '#64748b', fontSize: 12 }}
+                        domain={[0, 100]}
+                        label={{ value: 'ERQI', angle: -90, position: 'insideLeft', style: { fill: '#64748b', fontSize: 12, fontWeight: 600 } }}
+                      />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '1px solid #e2e8f0', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
+                        formatter={(value: number) => [value.toFixed(2), 'ERQI']}
+                        labelFormatter={(label: string) => {
+                          const d = new Date(label);
+                          return `${d.getDate().toString().padStart(2,'0')}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+                        }}
+                      />
+                      <Line type="monotone" dataKey="erqi" stroke="#0284c7" strokeWidth={2} dot={false} activeDot={{ r: 6, fill: '#0284c7', stroke: '#fff', strokeWidth: 2 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Table */}
+                <div className="history-table-container">
+                  <table className="history-table">
+                    <thead><tr><th>Date</th><th>Time</th><th>ERQI</th></tr></thead>
+                    <tbody>
+                      {getFilteredErqiHistory().map((entry, idx) => (
+                        <tr key={idx}>
+                          <td>{entry.data.split('-').reverse().join('-')}</td>
+                          <td>{entry.hora}</td>
+                          <td className="value-cell">{entry.erqi}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
 
             {/* Measurements Grid */}
             <div className="measurements-grid">
