@@ -441,7 +441,7 @@ export default function MeasurementsPage() {
                       {gqi.classification}
                     </span>
                   </div>
-                  <p style={{fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.5rem'}}>Click to view history</p>
+                  <p style={{fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.5rem'}}>Click to open / close history</p>
                 </div>
               </div>
             )}
@@ -582,6 +582,8 @@ export default function MeasurementsPage() {
                 <div className="date-range-selector">
                   <div className="preset-buttons">
                     {[
+                      { key: '1h', label: '1 Hour' },
+                      { key: '12h', label: '12 Hours' },
                       { key: '1d', label: '1 Day' },
                       { key: '1w', label: '1 Week' },
                       { key: '15d', label: '15 Days' },
@@ -777,6 +779,15 @@ export default function MeasurementsPage() {
           </div>
         </div>
       )}
+
+      {/* Scroll to top button */}
+      <button
+        className="scroll-to-top"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        title="Back to top"
+      >
+        ↑
+      </button>
     </div>
   );
 }
