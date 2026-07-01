@@ -57,6 +57,8 @@ export default function MeasurementsPage() {
   const [notificationCount, setNotificationCount] = useState<number>(0);
   const [gqi, setGqi] = useState<GQIResult | null>(null);
   const [showAbout, setShowAbout] = useState<boolean>(false);
+  const [showErqiHistory, setShowErqiHistory] = useState<boolean>(false);
+  const [erqiHistory, setErqiHistory] = useState<{data: string; hora: string; erqi: number}[]>([]);
   const chartRef = useRef<HTMLDivElement>(null);
 
   // Fetch measurements and notifications
@@ -99,6 +101,18 @@ export default function MeasurementsPage() {
     }
   };
 
+
+  const fetchErqiHistory = useCallback(async () => {
+    try {
+      const res = await fetch('/api/erqi-history');
+      const data = await res.json();
+      if (!data.error) {
+        setErqiHistory(data.history);
+      }
+    } catch (err) {
+      console.error('Failed to fetch ERQI history:', err);
+    }
+  }, []);
 
   const fetchHistory = useCallback(async (key: string) => {
     try {
@@ -388,7 +402,7 @@ export default function MeasurementsPage() {
             {/* Global Quality Index */}
             {gqi && (
               <div className="gqi-container">
-                <div className="gqi-card">
+                <div className={`gqi-card ${showErqiHistory ? 'selected' : ''}`} onClick={() => { setShowErqiHistory(s => !s); if (!erqiHistory.length) fetchErqiHistory(); }} style={{cursor: 'pointer'}}>
                   <div className="gqi-header">
                     <h3>Easy to Read Quality Indicator</h3>
                   </div>
@@ -405,10 +419,37 @@ export default function MeasurementsPage() {
                       {gqi.classification}
                     </span>
                   </div>
+                  <p style={{fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.5rem'}}>Click to view history</p>
                 </div>
               </div>
             )}
             
+            {/* ERQI History Chart */}
+            {showErqiHistory && erqiHistory.length > 0 && (() => {
+              const chartData = [...erqiHistory].reverse().map(e => ({
+                label: `${e.data.split('-').reverse().join('-')} ${e.hora}`,
+                value: e.erqi,
+              }));
+              return (
+                <div className="history-section">
+                  <div className="history-header">
+                    <h3>Easy to Read Quality Indicator — History</h3>
+                  </div>
+                  <div className="chart-container">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                        <XAxis dataKey="label" tick={{ fontSize: 10 }} interval={Math.floor(chartData.length / 10)} />
+                        <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
+                        <Tooltip formatter={(v: number) => [v.toFixed(2), 'ERQI']} />
+                        <Line type="monotone" dataKey="value" stroke="#0284c7" dot={false} strokeWidth={2} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Measurements Grid */}
             <div className="measurements-grid">
               {keys.map((key) => {
